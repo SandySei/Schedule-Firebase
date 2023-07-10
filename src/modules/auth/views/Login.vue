@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "../composables/useStore";
+import { useStore } from "@/composables/useStore";
 const { content } = useStore();
 const { auth } = content;
 
@@ -18,15 +18,15 @@ async function handleSignIn() {
     return;
   }
 
-  router.push("/about");
+  router.push("/items/");
 }
 </script>
 
 <template>
   <main>
+   
     <input type="email" v-model="email" />
     <input type="password" v-model="password" />
     <button @click="handleSignIn">Logar</button>
   </main>
 </template>
-

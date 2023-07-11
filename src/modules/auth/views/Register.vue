@@ -11,12 +11,24 @@ const props = defineProps({
   isSnackBarOpen: Boolean,
 });
 
+const roles = [
+  {
+    value: "customer",
+    label: "Comprador",
+  },
+  {
+    value: "realtor",
+    label: "Corretor",
+  },
+];
+
 const router = useRouter();
 const fullName = ref("");
 const email = ref("");
 const phone = ref("");
 const password = ref("");
 const confirmPassword = ref("");
+const role = ref("");
 const showPassword = ref(false);
 const isFormValid = ref(true);
 
@@ -46,6 +58,11 @@ const phoneRules = (value) => {
   if (value.length !== 11) {
     return "Insira um número válido";
   }
+  return true;
+};
+
+const selectRule = (v) => {
+  if (!v) return "Selecione uma opção";
   return true;
 };
 
@@ -97,6 +114,7 @@ async function handleSubmit(event) {
     password: password.value,
     name: fullName.value,
     phone: phone.value,
+    role: role.value,
   });
   if (!result) {
     emit("snackbar", "Problemas no cadastro");
@@ -121,6 +139,15 @@ async function handleSubmit(event) {
       type="number"
       v-model="phone"
     ></v-text-field>
+
+    <v-select
+      :items="roles.map((e) => e.label)"
+      item-text="label"
+      item-value="value"
+      label="Selecione"
+      :rules="[selectRule]"
+      v-model="role"
+    ></v-select>
 
     <v-text-field v-model="email" label="E-mail" :rules="[emailRules]">
     </v-text-field>

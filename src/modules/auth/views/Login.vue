@@ -22,7 +22,11 @@ async function handleSignIn() {
     return;
   }
 
-  router.push("/items/");
+  if (result.role == "customer") {
+    router.push("/customer");
+  } else {
+    router.push("/realtor");
+  }
 }
 </script>
 

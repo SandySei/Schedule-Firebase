@@ -1,9 +1,3 @@
-/**
- * main.js
- *
- * Bootstraps Vuetify and other plugins then mounts the App`
- */
-
 // Components
 import App from './App.vue'
 
@@ -15,8 +9,15 @@ import { registerPlugins } from '@/plugins'
 
 import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
+import "../firebase.config";
+import router from "./router";
+
+import "@/modules/auth";
+
 
 const app = createApp(App)
+
+app.use(router);
 
 registerPlugins(app)
 app.use(VCalendar, {})

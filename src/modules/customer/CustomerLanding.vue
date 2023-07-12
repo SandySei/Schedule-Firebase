@@ -15,6 +15,16 @@ export default {
     async getAppointment() {
       const querySnapshot = await getDocs(collection(db, "appointments"));
       this.appointments = querySnapshot.docs.map((doc) => doc.data());
+      const data = doc.data();
+    data.id = doc.id;
+    return data;
+    },
+    getFormatDate(datetime) {
+      if (!datetime) return "";
+      const date = new Date(datetime);
+      return `${date.getUTCDate()}/${
+        date.getUTCMonth() + 1
+      }/${date.getUTCFullYear()}`;
     },
   },
 };
@@ -26,15 +36,17 @@ export default {
        Clque para agendar visita <v-icon>mdi-arrow-right</v-icon>
         <v-btn icon="mdi-plus" size="x-large" @click="$router.push({ name: 'booking' });"></v-btn>
     </div>
-    <v-card class="mx-auto" max-width="300">
+    <h1 class="text-center">Confira seus agendamentos</h1>
+    <div class="d-flex align-center justify-center mt-16 mb-5">
+    <v-card v-for="appointment in appointments" :key="appointment.id" class="mx-auto" max-width="300">
       <v-list>
-        <v-list-item v-for="appointment in appointments" :key="appointment.id">
+        <v-list-item>
           <v-list-item>{{ appointment.Property }}</v-list-item>
           <v-list-item>{{ appointment.Realtor }}</v-list-item>
-          <v-list-item>{{ appointment.Time }}</v-list-item>
-          <v-list-item>{{ appointment.Date }}</v-list-item>
+          <v-list-item>{{ getFormatDate(appointment.Date) }} - {{ appointment.Time }}</v-list-item>
         </v-list-item>
       </v-list>
     </v-card>
+  </div>
   </v-container>
 </template>

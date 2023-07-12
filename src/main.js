@@ -14,7 +14,7 @@ import router from "./router";
 
 import "@/modules/auth";
 
-
+import "@/modules/customer";
 const app = createApp(App)
 
 app.use(router);

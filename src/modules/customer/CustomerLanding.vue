@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     async getAppointment() {
-      const querySnapshot = await getDocs(collection(db, "customers"));
+      const querySnapshot = await getDocs(collection(db, "appointments"));
       this.appointments = querySnapshot.docs.map((doc) => doc.data());
     },
   },

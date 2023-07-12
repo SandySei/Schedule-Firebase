@@ -40,8 +40,12 @@ export default {
   },
   methods: {
     openModal() {
-      this.showModal = true;
-    },
+  if (this.selectedCard && this.selectedRealtor && this.selectedDate && this.selectedTime) {
+    this.showModal = true;
+  } else {
+    alert("Por favor, selecione todas as opções");
+  }
+},
     getFormatDate(datetime) {
       if (!datetime) return "";
       const date = new Date(datetime);

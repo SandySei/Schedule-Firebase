@@ -17,17 +17,17 @@ const routes = [
             {
         path: '/user',
         name: 'Buyer',
-        component: () => import('@/modules/client/BuyerView.vue'),
+        component: () => import('@/modules/customer/BuyerView.vue'),
       },
       {
         path: '/customer',
         name: 'customerLanding',
-        component: () => import('@/modules/client/CustomerLanding.vue'),
+        component: () => import('@/modules/customer/CustomerLanding.vue'),
       },
       {
         path: '/booking',
         name: 'booking',
-        component: () => import('@/modules/client/CustomerBooking.vue'),
+        component: () => import('@/modules/customer/CustomerBooking.vue'),
       },
     ],
   },

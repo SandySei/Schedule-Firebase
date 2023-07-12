@@ -14,11 +14,6 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
       },
-            {
-        path: '/user',
-        name: 'Buyer',
-        component: () => import('@/modules/customer/BuyerView.vue'),
-      },
       {
         path: '/customer',
         name: 'customerLanding',
@@ -28,6 +23,16 @@ const routes = [
         path: '/booking',
         name: 'booking',
         component: () => import('@/modules/customer/CustomerBooking.vue'),
+      },
+      {
+        path: '/realtor',
+        name: 'realtorLanding',
+        component: () => import('@/modules/realtor/RealtorLanding.vue'),
+      },
+      {
+        path: '/schedule',
+        name: 'schedule',
+        component: () => import('@/modules/realtor/RealtorSchedule.vue'),
       },
     ],
   },

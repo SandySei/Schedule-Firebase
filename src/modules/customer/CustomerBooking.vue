@@ -2,6 +2,7 @@
 import { addDoc, getDocs, collection, doc } from "firebase/firestore";
 import { db } from "../../firebase.config.js";
 import LocationCard from "@/modules/customer/components/LocationCards.vue";
+import ConfirmationModal from "@/modules/customer/components/ConfirmationModal.vue";
 
 export default {
   data() {
@@ -26,6 +27,7 @@ export default {
         "Hermione Granger",
         "Rowena Ravenclaw",
       ],
+      showModal: false,
       selectedRealtor: "",
       selectedDate: null,
       selectedCard: null,
@@ -34,8 +36,12 @@ export default {
   },
   components: {
     LocationCard,
+    ConfirmationModal,
   },
   methods: {
+    openModal() {
+      this.showModal = true;
+    },
     getFormatDate(datetime) {
       if (!datetime) return "";
       const date = new Date(datetime);
@@ -58,8 +64,8 @@ export default {
         Time: this.selectedTime,
       };
       await this.create(payload);
-      this.$router.push({ name: "customerLanding" });
       this.$refs.form.reset();
+      this.$router.push({ name: "customerLanding" });
     },
     async getPropertyCard() {
       const querySnapshot = await getDocs(collection(db, "property"));
@@ -123,7 +129,12 @@ export default {
           </v-chip>
         </v-chip-group>
       </v-card>
-      <v-form class="w-50 ml-5 mr-8" @submit.prevent="addAppointment" ref="form" v-model="isFormValid">
+      <v-form
+        class="w-50 ml-5 mr-8"
+        @submit.prevent="addAppointment"
+        ref="form"
+        v-model="isFormValid"
+      >
         <v-card class="w-100 pl-5 py-4 bg-blue-lighten-5 d-flex flex-column">
           <h3 class="text-center">Detalhes do serviço</h3>
           <br />
@@ -145,10 +156,20 @@ export default {
             required
           ></v-select>
           <div class="d-flex flex-column align-center justify-center">
-            <v-btn :width="270" @click="addAppointment">Agendar</v-btn>
+            <v-btn :width="270" @click="openModal">Agendar</v-btn>
           </div>
         </v-card>
       </v-form>
+      <ConfirmationModal
+        modal-title="As informações abaixo estão corretas?"
+        :name="selectedCard?.landName"
+        :person="selectedRealtor"
+        :date="getFormatDate(selectedDate)"
+        :time="selectedTime"
+        :open="showModal"
+        @closeModal="showModal = false"
+        @submit="addAppointment"
+      />
     </div>
   </v-container>
 </template>

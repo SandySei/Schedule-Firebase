@@ -31,6 +31,7 @@ export default {
       selectedRealtor: "",
       selectedDate: null,
       selectedCard: null,
+      bookingStatus: "Pendente",
       cards: [],
     };
   },
@@ -66,6 +67,7 @@ export default {
         Realtor: this.selectedRealtor,
         Date: this.selectedDate,
         Time: this.selectedTime,
+        Status: this.bookingStatus
       };
       await this.create(payload);
       this.$refs.form.reset();

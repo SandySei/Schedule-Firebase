@@ -120,14 +120,19 @@ async function handleSubmit(event) {
     emit("snackbar", "Problemas no cadastro");
     return;
   }
+  emit("snackbar", "Cadastro realizado com sucesso!");
   router.push("/");
 }
 </script>
 
 <template>
   <v-form fast-fail @submit.prevent v-model="isFormValid">
+
+<div class="animate__animated animate__backInDown">
     <v-text-field
       v-model="fullName"
+      variant="underlined"
+      clearable
       label="Nome Completo"
       :rules="[fullNameRules]"
       @blur="formatText"
@@ -136,6 +141,8 @@ async function handleSubmit(event) {
     <v-text-field
       label="Numero de Telefone"
       :rules="[phoneRules]"
+      variant="underlined"
+      clearable
       type="number"
       v-model="phone"
     ></v-text-field>
@@ -144,33 +151,45 @@ async function handleSubmit(event) {
       :items="roles.map((e) => e.label)"
       item-text="label"
       item-value="value"
+      variant="underlined"
+      clearable
       label="Selecione"
       :rules="[selectRule]"
       v-model="role"
     ></v-select>
 
-    <v-text-field v-model="email" label="E-mail" :rules="[emailRules]">
+    <v-text-field
+      v-model="email"
+      variant="underlined"
+      clearable
+      label="E-mail"
+      :rules="[emailRules]"
+    >
     </v-text-field>
 
     <v-text-field
       v-model="password"
       label="Senha"
+      variant="underlined"
+      clearable
       :type="showPassword ? 'text' : 'password'"
       :rules="[passwordRules]"
     ></v-text-field>
 
     <v-text-field
       v-model="confirmPassword"
+      variant="underlined"
+      clearable
       label="Confirme sua Senha"
       :type="showPassword ? 'text' : 'password'"
       :rules="[isPasswordMatch]"
     ></v-text-field>
 
-    <v-checkbox
+    <v-checkbox-btn
       v-model="showPassword"
       label="Ver senhas"
       color="grey"
-    ></v-checkbox>
+    ></v-checkbox-btn>
 
     <v-btn
       :disabled="!isFormValid"
@@ -181,5 +200,13 @@ async function handleSubmit(event) {
       @click="handleSubmit"
       >Cadastrar</v-btn
     >
+
+    <p class="pt-6 pl-1 text-grey-darken-1">
+      Entre
+      <router-link class="text-blue-accent-4 text-decoration-none" to="/"
+        >aqui!</router-link
+      >
+    </p>
+  </div>
   </v-form>
 </template>

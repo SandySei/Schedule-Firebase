@@ -11,7 +11,7 @@ import "../firebase.config";
 import router from "./router";
 
 import "@/modules/auth";
-
+import 'animate.css';
 
 const app = createApp(App)
 

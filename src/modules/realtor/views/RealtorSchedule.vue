@@ -90,41 +90,24 @@ export default {
     </div>
      
       <v-form
-        class="w-50 ml-5 mr-8"
+        class="w-100 ml-5 mr-8 d-flex justify-center"
         @submit.prevent="addAppointment"
         ref="form"
         v-model="isFormValid"
       >
-        <v-card class="w-100 pl-5 py-4 bg-blue-lighten-5 d-flex flex-column">
-          <h3 class="text-center">Detalhes do serviço</h3>
+        <v-card class="w-25 pl-5 py-4 bg-blue-lighten-5 d-flex flex-column">
+          <h3 class="text-center">Travar agenda</h3>
           <br />
-          <p>Lote: {{ selectedCard?.landName }}</p>
-          <p>Corretor(a): {{ selectedRealtor }}</p>
-          <p>Horário: {{ getFormatDate(selectedDate) }} - {{ selectedTime }}</p>
-          <span><strong>Duração da visita: </strong>1 hora</span>
+          <span><strong>Data: </strong>{{ getFormatDate(selectedDate) }} - {{ selectedTime }}</span>
           <v-divider class="mb-4"></v-divider>
-          <span
-            ><strong>Escolha por quem gostaria de ser atendido:</strong></span
-          >
-          <v-select
-            :items="realtorNames"
-            v-model="selectedRealtor"
-            placeholder="Escolha o corretor"
-            label="Membro da equipe"
-            class="mt-3 px-16"
-            color="blue"
-            required
-          ></v-select>
           <div class="d-flex flex-column align-center justify-center">
             <v-btn :width="270" @click="openModal">Fechar agenda</v-btn>
           </div>
         </v-card>
       </v-form>
       <ConfirmationModal
-        modal-title="As informações abaixo estão corretas?"
-        :name="selectedCard?.landName"
-        :person="selectedRealtor"
-        :date="getFormatDate(selectedDate)"
+      modal-title="Gostaria de travar este horário?"
+      :date="getFormatDate(selectedDate)"
         :time="selectedTime"
         :open="showModal"
         @closeModal="showModal = false"

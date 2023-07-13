@@ -15,6 +15,7 @@ import router from "./router";
 import "@/modules/auth";
 
 import "@/modules/customer";
+import "@/modules/realtor";
 const app = createApp(App)
 
 app.use(router);

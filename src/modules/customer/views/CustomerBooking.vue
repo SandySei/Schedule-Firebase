@@ -1,6 +1,6 @@
 <script>
 import { addDoc, getDocs, collection, doc } from "firebase/firestore";
-import { db } from "../../firebase.config.js";
+import { db } from "../../../../firebase.config";
 import LocationCard from "@/modules/customer/components/LocationCards.vue";
 import ConfirmationModal from "@/modules/customer/components/ConfirmationModal.vue";
 

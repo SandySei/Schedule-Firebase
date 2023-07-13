@@ -1,6 +1,6 @@
 <script>
 import { getDocs, collection, doc } from "firebase/firestore";
-import { db } from "../../firebase.config.js";
+import { db } from "../../../../firebase.config";
 
 export default {
   data() {

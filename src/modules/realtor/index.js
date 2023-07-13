@@ -4,7 +4,7 @@ import { routes } from "./router";
 
 // //registrar a store local
 // const store = useStore();
-// store.registerModule("customer", customerStore);
+// store.registerModule("realtor", realtorStore);
 
 //registrar as rotas locais
 routes.forEach((route) => {

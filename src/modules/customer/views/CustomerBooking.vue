@@ -1,5 +1,12 @@
 <script>
-import { addDoc, getDocs, collection, doc } from "firebase/firestore";
+import {
+  addDoc,
+  getDocs,
+  collection,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../../firebase.config";
 import LocationCard from "@/modules/customer/components/LocationCards.vue";
 import ConfirmationModal from "@/modules/customer/components/ConfirmationModal.vue";
@@ -19,14 +26,8 @@ export default {
         "17:00",
         "18:00",
       ],
-      realtorNames: [
-        "Eva Mendes",
-        "Will Smith",
-        "Carlos Alberto",
-        "Harry Potter",
-        "Hermione Granger",
-        "Rowena Ravenclaw",
-      ],
+      realtors: [],
+
       showModal: false,
       selectedRealtor: "",
       selectedDate: null,
@@ -40,12 +41,17 @@ export default {
   },
   methods: {
     openModal() {
-  if (this.selectedCard && this.selectedRealtor && this.selectedDate && this.selectedTime) {
-    this.showModal = true;
-  } else {
-    alert("Por favor, selecione todas as opções");
-  }
-},
+      if (
+        this.selectedCard &&
+        this.selectedRealtor &&
+        this.selectedDate &&
+        this.selectedTime
+      ) {
+        this.showModal = true;
+      } else {
+        alert("Por favor, selecione todas as opções");
+      }
+    },
     getFormatDate(datetime) {
       if (!datetime) return "";
       const date = new Date(datetime);
@@ -79,9 +85,20 @@ export default {
         return data;
       });
     },
+    async getRealtors() {
+      const querySnapshot = await getDocs(
+        query(collection(db, "users"), where("role", "==", "realtor"))
+      );
+      this.realtors = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        return data;
+      });
+    },
   },
   mounted() {
     this.getPropertyCard();
+    this.getRealtors();
   },
 };
 </script>
@@ -151,7 +168,9 @@ export default {
             ><strong>Escolha por quem gostaria de ser atendido:</strong></span
           >
           <v-select
-            :items="realtorNames"
+            :items="realtors"
+            item-title="name"
+            item-value="id"
             v-model="selectedRealtor"
             placeholder="Escolha o corretor"
             label="Membro da equipe"

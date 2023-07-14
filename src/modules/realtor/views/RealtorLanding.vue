@@ -15,27 +15,26 @@ export default {
     };
   },
   computed: {
-    sortedAppointments() {
-      return this.appointments.sort((a, b) => {
-        const statusA = a.Status.toLowerCase();
-        const statusB = b.Status.toLowerCase();
-        if (statusA < statusB) return 1;
-        if (statusA > statusB) return -1;
-        
-        const dateA = new Date(a.Date);
-        const dateB = new Date(b.Date);
-        if (dateA < dateB) return -1;
-        if (dateA > dateB) return 1;
+  sortedAppointments() {
+    return this.appointments.sort((a, b) => {
+      const statusA = a.Status?.toLowerCase();
+      const statusB = b.Status?.toLowerCase();
+      if (statusA < statusB) return 1;
+      if (statusA > statusB) return -1;
 
-        const timeA = a.Time.toLowerCase();
-        const timeB = b.Time.toLowerCase();
-        if (timeA < timeB) return -1;
-        if (timeA > timeB) return 1;
+      const dateA = new Date(a.Date);
+      const dateB = new Date(b.Date);
+      if (dateA < dateB) return -1;
+      if (dateA > dateB) return 1;
 
+      const timeA = a.Time?.toLowerCase();
+      const timeB = b.Time?.toLowerCase();
+      if (timeA < timeB) return -1;
+      if (timeA > timeB) return 1;
 
-        return 0;
-      });
-    },
+      return 0;
+    });
+  },
   },
   methods: {
     async getAppointment() {

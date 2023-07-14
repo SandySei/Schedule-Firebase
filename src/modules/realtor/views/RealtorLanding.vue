@@ -15,27 +15,26 @@ export default {
     };
   },
   computed: {
-    sortedAppointments() {
-      return this.appointments.sort((a, b) => {
-        const statusA = a.Status.toLowerCase();
-        const statusB = b.Status.toLowerCase();
-        if (statusA < statusB) return 1;
-        if (statusA > statusB) return -1;
-        
-        const dateA = new Date(a.Date);
-        const dateB = new Date(b.Date);
-        if (dateA < dateB) return -1;
-        if (dateA > dateB) return 1;
+  sortedAppointments() {
+    return this.appointments.sort((a, b) => {
+      const statusA = a.Status?.toLowerCase();
+      const statusB = b.Status?.toLowerCase();
+      if (statusA < statusB) return 1;
+      if (statusA > statusB) return -1;
 
-        const timeA = a.Time.toLowerCase();
-        const timeB = b.Time.toLowerCase();
-        if (timeA < timeB) return -1;
-        if (timeA > timeB) return 1;
+      const dateA = new Date(a.Date);
+      const dateB = new Date(b.Date);
+      if (dateA < dateB) return -1;
+      if (dateA > dateB) return 1;
 
+      const timeA = a.Time?.toLowerCase();
+      const timeB = b.Time?.toLowerCase();
+      if (timeA < timeB) return -1;
+      if (timeA > timeB) return 1;
 
-        return 0;
-      });
-    },
+      return 0;
+    });
+  },
   },
   methods: {
     async getAppointment() {
@@ -74,17 +73,9 @@ export default {
 
 <template>
   <v-container class="bg-grey w-75">
-    <div class="d-flex align-center justify-end">
-      Adicione um horário na sua agenda <v-icon>mdi-arrow-right</v-icon>
-      <v-btn
-        icon="mdi-plus"
-        size="x-large"
-        @click="$router.push({ name: 'schedule' })"
-      ></v-btn>
-    </div>
-    <h1 class="text-center">Confira sua agenda</h1>
+    <h1 class="text-center my-9">Confira sua agenda</h1>
 
-    <v-table fixed-header class="mt-5">
+    <v-table fixed-header>
       <thead>
         <tr>
           <th class="text-left">Data escolhida</th>

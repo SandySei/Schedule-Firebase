@@ -27,13 +27,29 @@ export default {
         "18:00",
       ],
       realtors: [],
+      disabledDates: [
+        {
+          repeat: {
+            weekdays: [1, 7],
+          },
+        },
+      ],
 
       showModal: false,
-      selectedRealtor: "",
+      selectedRealtorId: "",
       selectedDate: null,
       selectedCard: null,
       cards: [],
     };
+  },
+  computed: {
+    selectedRealtor() {
+      //usar o selectedRealtorId para buscar em realtors
+      const realtor = this.realtors.find(
+        (realtor) => realtor.id == this.selectedRealtorId
+      );
+      return realtor;
+    },
   },
   components: {
     LocationCard,
@@ -43,7 +59,7 @@ export default {
     openModal() {
       if (
         this.selectedCard &&
-        this.selectedRealtor &&
+        this.selectedRealtorId &&
         this.selectedDate &&
         this.selectedTime
       ) {
@@ -69,7 +85,7 @@ export default {
     async addAppointment() {
       const payload = {
         Property: this.selectedCard?.landName,
-        Realtor: this.selectedRealtor,
+        Realtor: this.selectedRealtorId,
         Date: this.selectedDate,
         Time: this.selectedTime,
       };
@@ -129,6 +145,7 @@ export default {
         <v-date-picker
           class="ml-7 w-50"
           v-model.string="selectedDate"
+          :disabled-dates="disabledDates"
           :mode="'date'"
         ></v-date-picker>
 
@@ -160,7 +177,7 @@ export default {
           <h3 class="text-center">Detalhes do serviço</h3>
           <br />
           <p>Lote: {{ selectedCard?.landName }}</p>
-          <p>Corretor(a): {{ selectedRealtor }}</p>
+          <p>Corretor(a): {{ selectedRealtor?.name }}</p>
           <p>Horário: {{ getFormatDate(selectedDate) }} - {{ selectedTime }}</p>
           <span><strong>Duração da visita: </strong>1 hora</span>
           <v-divider class="mb-4"></v-divider>
@@ -171,7 +188,7 @@ export default {
             :items="realtors"
             item-title="name"
             item-value="id"
-            v-model="selectedRealtor"
+            v-model="selectedRealtorId"
             placeholder="Escolha o corretor"
             label="Membro da equipe"
             class="mt-3 px-16"
@@ -186,7 +203,7 @@ export default {
       <ConfirmationModal
         modal-title="As informações abaixo estão corretas?"
         :name="selectedCard?.landName"
-        :person="selectedRealtor"
+        :person="selectedRealtor?.name"
         :date="getFormatDate(selectedDate)"
         :time="selectedTime"
         :open="showModal"

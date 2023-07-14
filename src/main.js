@@ -17,6 +17,7 @@ import 'animate.css';
 
 
 import "@/modules/customer";
+import "@/modules/realtor";
 const app = createApp(App)
 
 app.use(router);

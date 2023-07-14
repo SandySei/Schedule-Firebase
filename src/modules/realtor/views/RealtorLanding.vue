@@ -100,7 +100,7 @@ export default {
           <td>{{ getFormatDate(appointment.Date) }}</td>
           <td>{{ appointment.Time }}</td>
           <td>{{ appointment.Property }}</td>
-          <td>Rafaella</td>
+          <td>{{appointment.Requester}}</td>
           <td>
             <v-checkbox-btn
               :label="appointment.Status"

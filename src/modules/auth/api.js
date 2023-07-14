@@ -3,6 +3,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 import {
   collection,
@@ -14,6 +16,7 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "/firebase.config";
+import router from "@/router";
 
 const auth = getAuth();
 const usersRef = collection(db, "users");
@@ -63,7 +66,7 @@ export const signIn = async (email, password) => {
     const qSnapshot = await getDocs(q);
 
     if (qSnapshot.docs.length > 1) {
-      throw new Error("Problema com essa conta.");
+      throw new Error("Problema com essa conta");
     }
 
     let myUserData = qSnapshot.docs[0].data();
@@ -71,4 +74,29 @@ export const signIn = async (email, password) => {
   } catch (error) {
     return;
   }
+};
+export const logout = async () =>
+  signOut(auth)
+    .then(() => {
+      // LogOut com sucesso
+      router.push("/");
+      localStorage.clear();
+    })
+    .catch((error) => {
+      alert("Ocorreu um erro!");
+    });
+
+export const isLogged = async (role) => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log(user);
+      //role == 'dificl' ? router.puhs('rearedsad') : router.push('dsadsa')
+    
+      return user;
+    } else {
+      alert("Faça seu login");
+       router.push("/")
+      return false;
+    }
+  });
 };

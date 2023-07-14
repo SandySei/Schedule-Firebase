@@ -3,6 +3,7 @@ import { RouterView } from "vue-router";
 import { onMounted } from "vue";
 import { useStore } from "./composables/useStore";
 import { ref } from "vue";
+import router from "./router";
 
 const { content } = useStore();
 const { auth } = content;
@@ -16,6 +17,8 @@ function setupSnackbar(message) {
 }
 
 onMounted(() => {
+  auth.isLogged();
+
   const user = JSON.parse(
     localStorage.getItem(
       "firebase:authUser:AIzaSyD0ArpOC15GJ7Tg0UwnqopYQ64gfK1kxBY:[DEFAULT]"

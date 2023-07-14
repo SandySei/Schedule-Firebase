@@ -1,6 +1,7 @@
 <script>
 import { addDoc, getDocs, collection, doc } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import LocationCard from "@/modules/customer/components/LocationCards.vue";
 import ConfirmationModal from "@/modules/customer/components/ConfirmationModal.vue";
 
@@ -31,6 +32,8 @@ export default {
       selectedRealtor: "",
       selectedDate: null,
       selectedCard: null,
+      bookingStatus: "Pendente",
+      Requester: "",
       cards: [],
     };
   },
@@ -61,11 +64,17 @@ export default {
       return docRef;
     },
     async addAppointment() {
+      const auth = getAuth();
+  const user = auth.currentUser;
+  const displayName = user.displayName;
+
       const payload = {
         Property: this.selectedCard?.landName,
         Realtor: this.selectedRealtor,
         Date: this.selectedDate,
         Time: this.selectedTime,
+        Status: this.bookingStatus,
+        Requester: displayName,
       };
       await this.create(payload);
       this.$refs.form.reset();

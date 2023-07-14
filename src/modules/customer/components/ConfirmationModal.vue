@@ -27,10 +27,10 @@ export default {
     <v-card>
       <v-card-title>{{ modalTitle }}</v-card-title>
       <v-card-text>
-        <p>Lote: {{ name }}</p>
-          <p>Corretor(a): {{ person }}</p>
+        <p v-if="name">Lote: {{ name }}</p>
+        <p v-if="person">Corretor(a): {{ person }}</p>
           <p>Horário: {{ date }} - {{ time }}</p>
-          <span><strong>Duração da visita: </strong>1 hora</span>
+          <!-- <span><strong>Duração da visita: </strong>1 hora</span> -->
       </v-card-text>
       <v-card-actions>
         <v-btn @click="submitInfo">Confirmar</v-btn>

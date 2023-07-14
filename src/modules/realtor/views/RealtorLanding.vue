@@ -73,17 +73,9 @@ export default {
 
 <template>
   <v-container class="bg-grey w-75">
-    <div class="d-flex align-center justify-end">
-      Adicione um horário na sua agenda <v-icon>mdi-arrow-right</v-icon>
-      <v-btn
-        icon="mdi-plus"
-        size="x-large"
-        @click="$router.push({ name: 'schedule' })"
-      ></v-btn>
-    </div>
-    <h1 class="text-center">Confira sua agenda</h1>
+    <h1 class="text-center my-9">Confira sua agenda</h1>
 
-    <v-table fixed-header class="mt-5">
+    <v-table fixed-header>
       <thead>
         <tr>
           <th class="text-left">Data escolhida</th>

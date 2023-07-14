@@ -32,6 +32,7 @@ export default {
       selectedRealtor: "",
       selectedDate: null,
       selectedCard: null,
+      isFormValid: false,
       bookingStatus: "Pendente",
       Requester: "",
       cards: [],
@@ -43,12 +44,48 @@ export default {
   },
   methods: {
     openModal() {
-  if (this.selectedCard && this.selectedRealtor && this.selectedDate && this.selectedTime) {
-    this.showModal = true;
-  } else {
-    alert("Por favor, selecione todas as opções");
-  }
-},
+      if (
+        this.selectedCard &&
+        this.selectedRealtor &&
+        this.selectedDate &&
+        this.selectedTime
+      ) {
+        this.showModal = true;
+      } else {
+        alert("Por favor, selecione todas as opções");
+      }
+    },
+    async checkConflict(realtor, date, time) {
+      const querySnapshot = await getDocs(collection(db, "appointments"));
+      const appointments = querySnapshot.docs.map((doc) => doc.data());
+
+      const conflict = appointments.some((appointment) => {
+        return (
+          appointment.Realtor === realtor &&
+          appointment.Date === date &&
+          appointment.Time === time
+        );
+      });
+
+      if (conflict) {
+        alert(
+          "Já existe um agendamento para esse horário com o mesmo corretor. Por favor, escolha outro horário."
+        );
+      } else {
+        return conflict;
+      }
+    },
+    async checkConflictAndOpenModal() {
+      const hasConflict = await this.checkConflict(
+        this.selectedRealtor,
+        this.selectedDate,
+        this.selectedTime
+      );
+
+      if (hasConflict === false) {
+        this.openModal();
+      }
+    },
     getFormatDate(datetime) {
       if (!datetime) return "";
       const date = new Date(datetime);
@@ -65,8 +102,8 @@ export default {
     },
     async addAppointment() {
       const auth = getAuth();
-  const user = auth.currentUser;
-  const displayName = user.displayName;
+      const user = auth.currentUser;
+      const displayName = user.displayName;
 
       const payload = {
         Property: this.selectedCard?.landName,
@@ -169,7 +206,17 @@ export default {
             required
           ></v-select>
           <div class="d-flex flex-column align-center justify-center">
-            <v-btn :width="270" @click="openModal">Agendar</v-btn>
+            <v-btn
+              :width="270"
+              @click="
+                checkConflictAndOpenModal(
+                  selectedRealtor,
+                  selectedDate,
+                  selectedTime
+                )
+              "
+              >Agendar</v-btn
+            >
           </div>
         </v-card>
       </v-form>

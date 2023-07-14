@@ -35,7 +35,7 @@ export const signUp = async ({ email, password, name, phone, role }) => {
       phoneNumber: phone,
     });
     // criar um usuário no firestore na coleção users usando email e role
-    await userRole({ email, role });
+    await userRole({ email, name, role });
     return user;
   } catch (err) {
     console.error(err);
@@ -52,6 +52,7 @@ export async function addRole() {
   const payload = {
     Role: this.role,
     email: this.email,
+    name: this.displayName,
   };
   await userRole(payload);
 }
@@ -89,13 +90,13 @@ export const logout = async () =>
 export const isLogged = async (role) => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log(user);
+      //console.log(user);
       //role == 'dificl' ? router.puhs('rearedsad') : router.push('dsadsa')
-    
+
       return user;
     } else {
       alert("Faça seu login");
-       router.push("/")
+      router.push("/");
       return false;
     }
   });

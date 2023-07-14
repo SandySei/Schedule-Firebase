@@ -108,7 +108,7 @@ async function handleSubmit(event) {
   if (!isFormValid.value) {
     return;
   }
-
+  
   const result = await auth.signUp({
     email: email.value,
     password: password.value,
@@ -128,85 +128,85 @@ async function handleSubmit(event) {
 <template>
   <v-form fast-fail @submit.prevent v-model="isFormValid">
 
-<div class="animate__animated animate__backInDown">
-    <v-text-field
-      v-model="fullName"
-      variant="underlined"
-      clearable
-      label="Nome Completo"
-      :rules="[fullNameRules]"
-      @blur="formatText"
-    ></v-text-field>
+    <div class="animate__animated animate__backInDown">
+      <v-text-field
+        v-model="fullName"
+        variant="underlined"
+        clearable
+        label="Nome Completo"
+        :rules="[fullNameRules]"
+        @blur="formatText"
+      ></v-text-field>
 
-    <v-text-field
-      label="Numero de Telefone"
-      :rules="[phoneRules]"
-      variant="underlined"
-      clearable
-      type="number"
-      v-model="phone"
-    ></v-text-field>
+      <v-text-field
+        label="Numero de Telefone"
+        :rules="[phoneRules]"
+        variant="underlined"
+        clearable
+        type="number"
+        v-model="phone"
+      ></v-text-field>
 
-    <v-select
-      :items="roles.map((e) => e.label)"
-      item-text="label"
-      item-value="value"
-      variant="underlined"
-      clearable
-      label="Selecione"
-      :rules="[selectRule]"
-      v-model="role"
-    ></v-select>
+      <v-select
+        :items="roles"
+        item-title="label"
+        item-value="value"
+        variant="underlined"
+        clearable
+        label="Selecione"
+        :rules="[selectRule]"
+        v-model="role"
+      ></v-select>
 
-    <v-text-field
-      v-model="email"
-      variant="underlined"
-      clearable
-      label="E-mail"
-      :rules="[emailRules]"
-    >
-    </v-text-field>
-
-    <v-text-field
-      v-model="password"
-      label="Senha"
-      variant="underlined"
-      clearable
-      :type="showPassword ? 'text' : 'password'"
-      :rules="[passwordRules]"
-    ></v-text-field>
-
-    <v-text-field
-      v-model="confirmPassword"
-      variant="underlined"
-      clearable
-      label="Confirme sua Senha"
-      :type="showPassword ? 'text' : 'password'"
-      :rules="[isPasswordMatch]"
-    ></v-text-field>
-
-    <v-checkbox-btn
-      v-model="showPassword"
-      label="Ver senhas"
-      color="grey"
-    ></v-checkbox-btn>
-
-    <v-btn
-      :disabled="!isFormValid"
-      color="grey-darken-2"
-      type="submit"
-      block
-      class="mt-2"
-      @click="handleSubmit"
-      >Cadastrar</v-btn
-    >
-
-    <p class="pt-6 pl-1 text-grey-darken-1">
-      Entre
-      <router-link class="text-blue-accent-4 text-decoration-none" to="/"
-        >aqui!</router-link
+      <v-text-field
+        v-model="email"
+        variant="underlined"
+        clearable
+        label="E-mail"
+        :rules="[emailRules]"
       >
-    </p>
-  </div>
+      </v-text-field>
+
+      <v-text-field
+        v-model="password"
+        label="Senha"
+        variant="underlined"
+        clearable
+        :type="showPassword ? 'text' : 'password'"
+        :rules="[passwordRules]"
+      ></v-text-field>
+
+      <v-text-field
+        v-model="confirmPassword"
+        variant="underlined"
+        clearable
+        label="Confirme sua Senha"
+        :type="showPassword ? 'text' : 'password'"
+        :rules="[isPasswordMatch]"
+      ></v-text-field>
+
+      <v-checkbox-btn
+        v-model="showPassword"
+        label="Ver senhas"
+        color="grey"
+      ></v-checkbox-btn>
+
+      <v-btn
+        :disabled="!isFormValid"
+        color="grey-darken-2"
+        type="submit"
+        block
+        class="mt-2"
+        @click="handleSubmit"
+        >Cadastrar</v-btn
+      >
+
+      <p class="pt-6 pl-1 text-grey-darken-1">
+        Entre
+        <router-link class="text-blue-accent-4 text-decoration-none" to="/"
+          >aqui!</router-link
+        >
+      </p>
+    </div>
   </v-form>
 </template>

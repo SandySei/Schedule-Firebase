@@ -1,5 +1,12 @@
 <script>
-import { addDoc, getDocs, collection, doc } from "firebase/firestore";
+import {
+  addDoc,
+  getDocs,
+  collection,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../../firebase.config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import LocationCard from "@/modules/customer/components/LocationCards.vue";
@@ -20,16 +27,17 @@ export default {
         "17:00",
         "18:00",
       ],
-      realtorNames: [
-        "Eva Mendes",
-        "Will Smith",
-        "Carlos Alberto",
-        "Harry Potter",
-        "Hermione Granger",
-        "Rowena Ravenclaw",
+      realtors: [],
+      disabledDates: [
+        {
+          repeat: {
+            weekdays: [1, 7],
+          },
+        },
       ],
+
       showModal: false,
-      selectedRealtor: "",
+      selectedRealtorId: "",
       selectedDate: null,
       selectedCard: null,
       isFormValid: false,
@@ -37,6 +45,15 @@ export default {
       Requester: "",
       cards: [],
     };
+  },
+  computed: {
+    selectedRealtor() {
+      //usar o selectedRealtorId para buscar em realtors
+      const realtor = this.realtors.find(
+        (realtor) => realtor.id == this.selectedRealtorId
+      );
+      return realtor;
+    },
   },
   components: {
     LocationCard,
@@ -46,7 +63,7 @@ export default {
     openModal() {
       if (
         this.selectedCard &&
-        this.selectedRealtor &&
+        this.selectedRealtorId &&
         this.selectedDate &&
         this.selectedTime
       ) {
@@ -107,7 +124,7 @@ export default {
 
       const payload = {
         Property: this.selectedCard?.landName,
-        Realtor: this.selectedRealtor,
+        Realtor: this.selectedRealtorId,
         Date: this.selectedDate,
         Time: this.selectedTime,
         Status: this.bookingStatus,
@@ -125,9 +142,20 @@ export default {
         return data;
       });
     },
+    async getRealtors() {
+      const querySnapshot = await getDocs(
+        query(collection(db, "users"), where("role", "==", "realtor"))
+      );
+      this.realtors = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        return data;
+      });
+    },
   },
   mounted() {
     this.getPropertyCard();
+    this.getRealtors();
   },
 };
 </script>
@@ -158,6 +186,7 @@ export default {
         <v-date-picker
           class="ml-7 w-50"
           v-model.string="selectedDate"
+          :disabled-dates="disabledDates"
           :mode="'date'"
         ></v-date-picker>
 
@@ -189,7 +218,7 @@ export default {
           <h3 class="text-center">Detalhes do serviço</h3>
           <br />
           <p>Lote: {{ selectedCard?.landName }}</p>
-          <p>Corretor(a): {{ selectedRealtor }}</p>
+          <p>Corretor(a): {{ selectedRealtor?.name }}</p>
           <p>Horário: {{ getFormatDate(selectedDate) }} - {{ selectedTime }}</p>
           <span><strong>Duração da visita: </strong>1 hora</span>
           <v-divider class="mb-4"></v-divider>
@@ -197,8 +226,10 @@ export default {
             ><strong>Escolha por quem gostaria de ser atendido:</strong></span
           >
           <v-select
-            :items="realtorNames"
-            v-model="selectedRealtor"
+            :items="realtors"
+            item-title="name"
+            item-value="id"
+            v-model="selectedRealtorId"
             placeholder="Escolha o corretor"
             label="Membro da equipe"
             class="mt-3 px-16"
@@ -223,7 +254,7 @@ export default {
       <ConfirmationModal
         modal-title="As informações abaixo estão corretas?"
         :name="selectedCard?.landName"
-        :person="selectedRealtor"
+        :person="selectedRealtor?.name"
         :date="getFormatDate(selectedDate)"
         :time="selectedTime"
         :open="showModal"

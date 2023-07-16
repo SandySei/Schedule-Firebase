@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { db } from "/firebase.config";
 import router from "@/router";
+import add from "date-fns/fp/add";
 
 const auth = getAuth();
 const usersRef = collection(db, "users");
@@ -44,7 +45,17 @@ export const signUp = async ({ email, password, name, phone, role }) => {
 };
 
 async function userRole(payload) {
-  const docRef = await addDoc(collection(db, "users"), payload);
+  //pegar o ususario primeiro e depois adicionar a role
+  const q = query(usersRef, where("email", "==", payload, email));
+  const qSnapshot = await getDocs(q);
+  const dataPrevious = qSnapshot.doc[0].data();
+
+  const docRef = await addDoc(collection(db, "users"), {
+    ...dataPrevious,
+    ...payload,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
   return docRef;
 }
 
@@ -87,7 +98,7 @@ export const logout = async () =>
       alert("Ocorreu um erro!");
     });
 
-export const isLogged = async (role) => {
+export const isLogged = async () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       //console.log(user);

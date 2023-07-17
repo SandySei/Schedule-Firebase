@@ -8,7 +8,7 @@
   ></v-btn>
 </template>
 
-<script>
+<script setup>
 import { useStore } from "@/composables/useStore";
 
 const { content } = useStore();

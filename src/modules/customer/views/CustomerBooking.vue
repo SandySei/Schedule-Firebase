@@ -12,6 +12,7 @@ import { db } from "../../../../firebase.config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import LocationCard from "@/modules/customer/components/LocationCards.vue";
 import ConfirmationModal from "@/modules/customer/components/ConfirmationModal.vue";
+import Menu from "@/modules/customer/components/Menu.vue";
 
 export default {
   data() {
@@ -59,6 +60,7 @@ export default {
   components: {
     LocationCard,
     ConfirmationModal,
+    Menu,
   },
   methods: {
     openModal() {
@@ -152,7 +154,7 @@ export default {
       const displayName = user.displayName;
 
       const payload = {
-        Property: this.selectedCard?.landName,
+        Property: this.selectedCard,
         Realtor: this.selectedRealtorId,
         Date: this.selectedDate,
         Time: this.selectedTime,
@@ -190,8 +192,31 @@ export default {
 </script>
 
 <template>
-  <v-container class="bg-grey w-75">
-    <h1 class="text-center">Agende seu horário</h1>
+  <Menu class="mb-8"></Menu>
+
+  <v-container class="bg-grey-lighten-3 mb-8 elevation-2 w-75">
+    <div class="d-flex flex-row align-center justify-center w-100">
+      <div class="w-25"></div>
+      <h2 class="text-center w-50">Agende seu horário:</h2>
+      <div
+        class="btn-container d-flex align-end justify-end mr-2 mt-2 w-25"
+        @click="$router.push({ name: 'customerLanding' })"
+      >
+        <v-btn
+          class="rounded-pill"
+          expand-on-hover
+          variant="flat"
+          @click="deleteAppointment(appointment.id)"
+        >
+          <p class="text text-body-2 text-grey-darken-2">Clique para voltar</p>
+          <span
+            ><v-icon size="x-large" color="grey-darken-2"
+              >mdi-plus</v-icon
+            ></span
+          >
+        </v-btn>
+      </div>
+    </div>
 
     <h3>Escolha o local:</h3>
     <div class="d-flex align-center mt-4">
@@ -199,12 +224,12 @@ export default {
         v-for="card in cards"
         :key="card.id"
         :title="card.landName"
-        :description="card.description"
+        :description="card.landDescription"
         :image="card.landImage"
         :land="card.landSize"
         :delivery="card.landDelivery"
         :type="card.landType"
-        :is-selected="selectedCard === card"
+        :isSelected="selectedCard === card"
         @select="selectCard(card)"
       />
     </div>
@@ -293,3 +318,26 @@ export default {
     </div>
   </v-container>
 </template>
+
+<style scoped>
+.rounded-pill {
+  height: 60px;
+}
+.btn-container:hover {
+  transition: 1s;
+}
+.text {
+  transition: 1s;
+  width: 0px;
+  overflow: hidden;
+}
+.btn-container:hover .text {
+  display: flex;
+  width: 180px;
+  align-content: center;
+}
+
+h2 {
+  font-size: 2rem;
+}
+</style>

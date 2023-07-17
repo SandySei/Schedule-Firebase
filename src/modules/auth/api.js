@@ -92,7 +92,6 @@ export const logout = async () =>
     .then(() => {
       // LogOut com sucesso
       router.push("/");
-      localStorage.clear();
     })
     .catch((error) => {
       alert("Ocorreu um erro!");
@@ -100,6 +99,7 @@ export const logout = async () =>
 
 export const isLogged = async () => {
   onAuthStateChanged(auth, (user) => {
+    console.log(user);
     if (user) {
       //console.log(user);
       //role == 'dificl' ? router.puhs('rearedsad') : router.push('dsadsa')

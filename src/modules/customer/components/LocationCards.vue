@@ -1,8 +1,8 @@
 <script>
 export default {
   props: {
+    key: String,
     title: String,
-    details: String,
     description: String,
     image: String,
     land: String,
@@ -13,9 +13,9 @@ export default {
   emits: ["select"],
   methods: {
     selectCard() {
-      this.$emit('select', this.isSelected);
+      this.$emit("select", this.isSelected);
     },
-  }
+  },
 };
 </script>
 
@@ -23,17 +23,15 @@ export default {
   <v-card
     :class="{ selected: isSelected }"
     @click="selectCard"
-    max-width="380"
-    class="mx-auto mb-6"
-  >
-    <v-img width="400" height="250" :src="image" />
-    <v-card-title
-      ><span>{{ title }}</span>
-    </v-card-title>
-    <v-card-text>
-      <div>{{ description }}</div>
-    </v-card-text>
-    <div class="my-4">
+    class="mx-auto mb-6 card rounded-0">
+
+    <v-img width="400" height="300" :src="image" />
+
+    <v-card-title>{{ title }} </v-card-title>
+    
+    <v-card-subtitle>Endereço:<br>{{ description }}</v-card-subtitle>
+
+    <div class="my-4 d-flex justify-center align-center">
       <span>
         <v-icon class="ml-4" size="large">mdi-land-plots</v-icon>
         {{ land }}
@@ -42,10 +40,13 @@ export default {
         <v-icon class="ml-4" size="x-large">mdi-home-outline</v-icon>
         {{ type }}
       </span>
-      <span>
-        <v-icon class="ml-4" size="x-large">mdi-alarm</v-icon>
-        {{ delivery }}
-      </span>
     </div>
   </v-card>
 </template>
+
+<style scoped>
+.card{
+ width: 400px;
+}
+
+</style>

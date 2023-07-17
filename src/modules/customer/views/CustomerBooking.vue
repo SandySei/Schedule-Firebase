@@ -33,7 +33,7 @@ export default {
       disabledDates: [
         {
           repeat: {
-            weekdays: [1, 7],
+            weekdays: [1],
           },
         },
       ],
@@ -72,7 +72,7 @@ export default {
       ) {
         this.showModal = true;
       } else {
-        alert("Por favor, selecione todas as opções");
+        this.$emit("snackbar", "Por favor, selecione TODAS as opções!");
       }
     },
     async checkConflict(realtorId, date, time) {
@@ -104,8 +104,9 @@ export default {
       )
         .then((hasConflict) => {
           if (hasConflict) {
-            alert(
-              "Já existe um agendamento para esse horário com o mesmo corretor. Por favor, escolha outro horário."
+            this.$emit(
+              "snackbar",
+              "Já existe um agendamento para esse horário. Por favor, escolha outro horário."
             );
           } else {
             this.openModal();
@@ -192,7 +193,7 @@ export default {
 </script>
 
 <template>
-  <Menu class="mb-8"></Menu>
+  <Menu class="mb-8 elevation-3"></Menu>
 
   <v-container class="bg-grey-lighten-3 mb-8 elevation-2 w-75">
     <div class="d-flex flex-row align-center justify-center w-100">
@@ -202,23 +203,19 @@ export default {
         class="btn-container d-flex align-end justify-end mr-2 mt-2 w-25"
         @click="$router.push({ name: 'customerLanding' })"
       >
-        <v-btn
-          class="rounded-pill"
-          expand-on-hover
-          variant="flat"
-          @click="deleteAppointment(appointment.id)"
-        >
+        <v-btn class="rounded-pill" expand-on-hover variant="flat">
           <p class="text text-body-2 text-grey-darken-2">Clique para voltar</p>
           <span
             ><v-icon size="x-large" color="grey-darken-2"
-              >mdi-plus</v-icon
+              >mdi-arrow-left</v-icon
             ></span
           >
         </v-btn>
       </div>
     </div>
 
-    <h3>Escolha o local:</h3>
+    <p class="ml-10">Escolha o local:</p>
+
     <div class="d-flex align-center mt-4">
       <LocationCard
         v-for="card in cards"
@@ -233,63 +230,66 @@ export default {
         @select="selectCard(card)"
       />
     </div>
-    <v-divider></v-divider>
 
     <div class="d-flex align-center justify-center my-5">
-      <v-card class="d-flex align-center justify-center bg-blue-lighten-5 mx-7">
-        <v-date-picker
-          class="ml-7 w-50"
-          v-model.string="selectedDate"
-          :disabled-dates="disabledDates"
-          :mode="'date'"
-        ></v-date-picker>
+      <div>
+        <p class="ml-10 mb-5 d-flex justify-center">Escolha o Dia e Horário:</p>
+        <div class="d-flex align-center justify-center mx-7">
+          <v-date-picker
+            class="ml-7 w-50 rounded-0"
+            v-model.string="selectedDate"
+            :disabled-dates="disabledDates"
+            :mode="'date'"
+          ></v-date-picker>
 
-        <v-chip-group
-          class="d-flex justify-center"
-          v-model="selectedTime"
-          selected-class="text-deep-purple-accent-4"
-          mandatory
-        >
-          <v-chip
-            v-for="time in schedules"
-            :key="time"
-            :value="time"
-            size="x-large"
-            rounded="sm"
-            class="mx-4 my-5"
-          >
-            {{ time }}
-          </v-chip>
-        </v-chip-group>
-      </v-card>
+          <div class="w-50">
+            <v-chip-group
+              class="d-flex justify-center w-100"
+              v-model="selectedTime"
+              selected-class="text-blue-darken-4"
+              mandatory
+            >
+              <v-chip
+                v-for="time in schedules"
+                :key="time"
+                :value="time"
+                size="x-large"
+                class="mx-4 my-5 rounded-0"
+              >
+                {{ time }}
+              </v-chip>
+            </v-chip-group>
+          </div>
+        </div>
+      </div>
+
       <v-form
         class="w-50 ml-5 mr-8"
         @submit.prevent="addAppointment"
         ref="form"
         v-model="isFormValid"
       >
-        <v-card class="w-100 pl-5 py-4 bg-blue-lighten-5 d-flex flex-column">
-          <h3 class="text-center">Detalhes do serviço</h3>
-          <br />
-          <p>Lote: {{ selectedCard?.landName }}</p>
-          <p>Corretor(a): {{ selectedRealtor?.name }}</p>
-          <p>Horário: {{ getFormatDate(selectedDate) }} - {{ selectedTime }}</p>
+        <v-card class="w-100 pl-5 py-4 bg-blue-darken-4 d-flex flex-column">
+          <h3 class="text-center mb-1">Detalhes do serviço:</h3>
+          <v-divider class="my-2"></v-divider>
+          <p><strong>Lote: </strong> {{ selectedCard?.landName }}</p>
+          <p><strong>Corretor(a): </strong> {{ selectedRealtor?.name }}</p>
+          <p><strong>Dia: </strong> {{ getFormatDate(selectedDate) }}</p>
+          <p><strong>Horário: </strong> {{ selectedTime }}</p>
           <span><strong>Duração da visita: </strong>1 hora</span>
-          <v-divider class="mb-4"></v-divider>
-          <span
-            ><strong>Escolha por quem gostaria de ser atendido:</strong></span
-          >
+          <v-divider class="my-2"></v-divider>
+          <p class="text-center"><strong>Escolha seu corretor(a):</strong></p>
           <v-select
             :items="realtors"
             item-title="name"
             item-value="id"
             v-model="selectedRealtorId"
             placeholder="Escolha o corretor"
-            label="Membro da equipe"
             class="mt-3 px-16"
-            color="blue"
+            variant="underlined"
             required
           ></v-select>
+
           <div class="d-flex flex-column align-center justify-center">
             <v-btn
               :width="270"
@@ -300,7 +300,7 @@ export default {
                   selectedTime
                 )
               "
-              >Agendar</v-btn
+              >Reservar Horário</v-btn
             >
           </div>
         </v-card>
@@ -320,6 +320,10 @@ export default {
 </template>
 
 <style scoped>
+.card-time {
+  width: 550px;
+}
+
 .rounded-pill {
   height: 60px;
 }
@@ -333,7 +337,7 @@ export default {
 }
 .btn-container:hover .text {
   display: flex;
-  width: 180px;
+  width: 130px;
   align-content: center;
 }
 

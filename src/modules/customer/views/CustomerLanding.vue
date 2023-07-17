@@ -31,13 +31,22 @@ export default {
       );
       this.sortAppointments(); // Ordena os agendamentos por data mais próxima
     },
+
     sortAppointments() {
+      const currentDate = new Date();
       this.appointments.sort((a, b) => {
         const dateA = new Date(a.Date);
         const dateB = new Date(b.Date);
+
+        if (dateA >= currentDate && dateB < currentDate) {
+          return -1; // Mantém a data atual no topo
+        } else if (dateA < currentDate && dateB >= currentDate) {
+          return ; // Move a data atual para cima
+        }
         return dateA - dateB;
       });
     },
+
     getFormatDate(datetime) {
       if (!datetime) return "";
       const date = new Date(datetime);
@@ -87,7 +96,7 @@ export default {
       <v-card
         v-for="appointment in appointments"
         :key="appointment.id"
-        :class="{ 'past-date': isPastDate(appointment.Date)}"
+        :class="{ 'past-date': isPastDate(appointment.Date) }"
         class="w-75 mb-5 elevation-0 rounded-0"
       >
         <v-card-title>{{ appointment.Property.landName }}</v-card-title>
@@ -96,11 +105,10 @@ export default {
         }}</v-card-subtitle>
 
         <v-card-text
-          ><strong >Corretor:</strong>
-          {{ appointment.RealtorName }} <br />
-          <strong >Agendado para dia</strong>
+          ><strong>Corretor:</strong> {{ appointment.RealtorName }} <br />
+          <strong>Agendado para dia</strong>
           {{ getFormatDate(appointment.Date) }}
-          <strong >às</strong>
+          <strong>às</strong>
           {{ appointment.Time }}
         </v-card-text>
       </v-card>
@@ -127,7 +135,7 @@ export default {
 }
 
 .past-date {
-    background-color:#B71C1C;
+  background-color: #b71c1c;
 }
 
 h2 {

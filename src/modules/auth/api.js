@@ -96,7 +96,7 @@ export const isLogged = async () => {
 
       return user;
     } else {
-      alert("Faça seu login");
+     // alert("Faça seu login");
       router.push("/");
       return false;
     }

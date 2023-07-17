@@ -109,13 +109,6 @@ export default {
 </template>
 
 <style scoped>
-.box-glass {
-  background: rgba(212, 212, 212, 0.25);
-  box-shadow: 0 4px 10px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
 .rounded-pill {
   height: 60px;
 }

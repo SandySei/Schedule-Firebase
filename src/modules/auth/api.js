@@ -45,17 +45,7 @@ export const signUp = async ({ email, password, name, phone, role }) => {
 };
 
 async function userRole(payload) {
-  //pegar o ususario primeiro e depois adicionar a role
-  const q = query(usersRef, where("email", "==", payload, email));
-  const qSnapshot = await getDocs(q);
-  const dataPrevious = qSnapshot.doc[0].data();
-
-  const docRef = await addDoc(collection(db, "users"), {
-    ...dataPrevious,
-    ...payload,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
+  const docRef = await addDoc(collection(db, "users"), payload);
   return docRef;
 }
 

@@ -92,11 +92,8 @@ export const isLogged = async () => {
     console.log(user);
     if (user) {
       //console.log(user);
-      //role == 'dificl' ? router.puhs('rearedsad') : router.push('dsadsa')
-
       return user;
     } else {
-     // alert("Faça seu login");
       router.push("/");
       return false;
     }

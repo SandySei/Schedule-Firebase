@@ -11,13 +11,8 @@ const { auth } = content;
     fixed-tabs
     class="mini-menu d-flex justify-space-evenly alising-center w-100 bg-grey-lighten-2"
   >
-    <router-link to="/customer" class="w-100 h-100">
-      <v-img
-        class="ml-8"
-        :width="250"
-        aspect-ratio="1/3"
-        src="/src/assets/Schedule-text.png"
-      ></v-img>
+    <router-link to="/customer" class="w-100 h-100 d-flex">
+      <img src="/src/assets/Schedule-text.png"/>
     </router-link>
 
     <router-link to="/" class="w-100 h-100">
@@ -35,6 +30,13 @@ const { auth } = content;
 
 <style scoped>
 .mini-menu {
-  height: 80px;
+  height: 55px;
+}
+
+img {
+  width: auto;
+  height: 40px;
+  margin-top: 10px;
+  margin-left: 15px;
 }
 </style>

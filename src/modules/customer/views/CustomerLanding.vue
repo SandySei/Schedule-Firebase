@@ -55,16 +55,13 @@ export default {
 
     sortAppointments() {
       const currentDate = new Date();
+
       this.appointments.sort((a, b) => {
         const dateA = new Date(a.Date);
         const dateB = new Date(b.Date);
 
-        if (dateA.getDate() == currentDate.getDate()) return -1;
-        if (dateA >= currentDate && dateB < currentDate) {
-          return -1;
-        } else if (dateA < currentDate && dateB >= currentDate) {
-          return 0;
-        }
+        if (dateA.getDate() < currentDate.getDate()) return 1;
+        if (dateB.getDate() < currentDate.getDate() && dateA > dateB) return -1;
         return dateA - dateB;
       });
     },
@@ -115,7 +112,6 @@ export default {
         @click="$router.push({ name: 'booking' })"
       >
         <v-btn class="rounded-pill elevation-1" expand-on-hover variant="flat">
-
           <p class="text text-body-2 text-grey-darken-2">
             Clique para agendar visita
           </p>
@@ -128,7 +124,7 @@ export default {
       </div>
     </div>
 
-    <div class=" d-flex align-center flex-column justify-center mt-8 w-100">
+    <div class="d-flex align-center flex-column justify-center mt-8 w-100">
       <v-card
         v-for="appointment in appointments"
         :key="appointment.id"
@@ -181,8 +177,7 @@ export default {
 </template>
 
 <style scoped>
-
-.cardprincipal{
+.cardprincipal {
   background: rgba(255, 255, 255, 0.4);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(4px);
@@ -205,8 +200,8 @@ export default {
   width: 168px;
   align-content: center;
 }
-.cardcominfo{
-  background-color:#ffffffb1;
+.cardcominfo {
+  background-color: #ffffffb1;
 }
 .past-date {
   background-color: #b71c1cb1;

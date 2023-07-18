@@ -106,7 +106,7 @@ export default {
 <template>
   <Menu class="mb-8 elevation-3"></Menu>
 
-  <v-container class="bg-grey-lighten-3 mb-8 elevation-2 w-75">
+  <v-container class="cardprincipal mb-8 elevation-2 w-75">
     <div class="d-flex flex-row align-center justify-center w-100">
       <div class="w-25"></div>
       <h2 class="text-center w-50">Seus agendamentos:</h2>
@@ -114,7 +114,8 @@ export default {
         class="btn-container texto1 d-flex align-end justify-end mr-2 mt-2 w-25"
         @click="$router.push({ name: 'booking' })"
       >
-        <v-btn class="rounded-pill" expand-on-hover variant="flat">
+        <v-btn class="rounded-pill elevation-1" expand-on-hover variant="flat">
+
           <p class="text text-body-2 text-grey-darken-2">
             Clique para agendar visita
           </p>
@@ -127,7 +128,7 @@ export default {
       </div>
     </div>
 
-    <div class="d-flex align-center flex-column justify-center mt-8 w-100">
+    <div class=" d-flex align-center flex-column justify-center mt-8 w-100">
       <v-card
         v-for="appointment in appointments"
         :key="appointment.id"
@@ -135,7 +136,7 @@ export default {
           'past-date': isPastDate(appointment.Date),
           today: isToday(appointment.Date),
         }"
-        class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
+        class="cardcominfo w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
       >
         <div class="w-75">
           <v-card-title>{{ appointment.Property.landName }}</v-card-title>
@@ -156,10 +157,14 @@ export default {
         </div>
 
         <div
-          class="btn-container d-flex align-end justify-end mr-2 mt-2 w-25"
+          class="btn-container d-flex align-end justify-end mt-2 w-25 mr-6"
           @click="deleteAppointment(appointment.id)"
         >
-          <v-btn class="rounded-pill" expand-on-hover variant="flat">
+          <v-btn
+            class="rounded-pill elevation-1"
+            expand-on-hover
+            variant="flat"
+          >
             <p class="text text-body-2 text-grey-darken-2">
               Cancelar Agendamento
             </p>
@@ -176,13 +181,20 @@ export default {
 </template>
 
 <style scoped>
+
+.cardprincipal{
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
 .rounded-pill {
   height: 60px;
 }
 .btn-container:hover {
   transition: 1s;
 }
-
 .text {
   transition: 1s;
   width: 0px;
@@ -193,12 +205,14 @@ export default {
   width: 168px;
   align-content: center;
 }
-
+.cardcominfo{
+  background-color:#ffffffb1;
+}
 .past-date {
-  background-color: #b71c1ca9;
+  background-color: #b71c1cb1;
 }
 .today {
-  background-color: #1565c0a9;
+  background-color: #1565c0b1;
 }
 h2 {
   font-size: 2rem;

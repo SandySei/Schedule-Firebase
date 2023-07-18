@@ -1,8 +1,16 @@
 <script>
-import { getDocs, collection, getDoc, deleteDoc } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  getDoc,
+  deleteDoc,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../../firebase.config";
 import Menu from "@/modules/customer/components/Menu.vue";
 import { doc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default {
   data() {
@@ -10,25 +18,36 @@ export default {
       appointments: [],
     };
   },
-  async mounted() {
-    await this.getAppointment();
-  },
   components: {
     Menu,
   },
   methods: {
     async getAppointment() {
-      const querySnapshot = await getDocs(collection(db, "appointments"));
+      const auth = getAuth();
+      const { displayName } = auth.currentUser;
+
+      const customerAppointmentsSnapshot = await getDocs(
+        query(
+          collection(db, "appointments"),
+          where("Requester", "==", displayName)
+        )
+      );
+
       this.appointments = await Promise.all(
-        querySnapshot.docs.map(async (appointmentRef) => {
-          const data = appointmentRef.data();
-          data.id = appointmentRef.id;
-          if (!data.Realtor) return data;
-          const realtorRef = await getDoc(doc(db, "users", data.Realtor));
-          const realtorData = realtorRef.data();
-          data.RealtorName = realtorData.name;
-          data.RealtorPhone = realtorData.phone;
-          return data;
+        customerAppointmentsSnapshot.docs.map(async (appointmentDoc) => {
+          const appointmentData = {
+            id: appointmentDoc.id,
+            ...appointmentDoc.data(),
+          };
+
+          const realtorDoc = await getDoc(
+            doc(db, "users", appointmentData.Realtor)
+          );
+
+          return {
+            ...appointmentData,
+            Realtor: { id: realtorDoc.id, ...realtorDoc.data() },
+          };
         })
       );
       this.sortAppointments(); // Ordena os agendamentos por data mais próxima
@@ -76,7 +95,10 @@ export default {
     },
   },
   mounted() {
-    this.getAppointment();
+    onAuthStateChanged(getAuth(), (user) => {
+      if (!user) return;
+      this.getAppointment();
+    });
   },
 };
 </script>
@@ -93,6 +115,7 @@ export default {
         @click="$router.push({ name: 'booking' })"
       >
         <v-btn class="rounded-pill elevation-1" expand-on-hover variant="flat">
+
           <p class="text text-body-2 text-grey-darken-2">
             Clique para agendar visita
           </p>
@@ -124,8 +147,8 @@ export default {
           >
 
           <v-card-text
-            ><strong>Corretor:</strong> {{ appointment.RealtorName }} <br />
-            <strong>Telefone: </strong> {{ appointment.RealtorPhone }} <br />
+            ><strong>Corretor:</strong> {{ appointment.Realtor.name }} <br />
+            <strong>Telefone: </strong> {{ appointment.Realtor.phone }} <br />
             <strong>Agendado para dia</strong>
             {{ getFormatDate(appointment.Date) }}
             <strong>às</strong>

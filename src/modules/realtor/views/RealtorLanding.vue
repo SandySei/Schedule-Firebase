@@ -5,19 +5,22 @@ import {
   updateDoc,
   deleteDoc,
   collection,
-  doc,
   query,
   where,
 } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
 import Menu from "@/modules/realtor/components/Menu.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc } from "firebase/firestore";
 
 export default {
   data() {
     return {
       appointments: [],
     };
+  },
+  async mounted() {
+    await this.getAppointment();
   },
   computed: {
     sortedAppointments() {
@@ -111,10 +114,13 @@ export default {
     async updateAppointmentStatus(appointmentId, status) {
       const appointmentRef = doc(db, "appointments", appointmentId);
       await updateDoc(appointmentRef, { Status: status });
+      await this.getAppointment();
     },
     async deleteAppointment(appointmentId) {
       const appointmentRef = doc(db, "appointments", appointmentId);
       await deleteDoc(appointmentRef);
+      await this.getAppointment();
+      this.$emit("snackbar", "Agendamento desmarcado com sucesso!");
     },
     getFormatDate(datetime) {
       if (!datetime) return "";
@@ -122,6 +128,17 @@ export default {
       return `${date.getUTCDate()}/${
         date.getUTCMonth() + 1
       }/${date.getUTCFullYear()}`;
+    },
+
+    isPastDate(date) {
+      const currentDate = new Date();
+      const appointmentDate = new Date(date);
+      return appointmentDate.getDate() < currentDate.getDate();
+    },
+    isToday(date) {
+      const currentDate = new Date();
+      const appointmentDate = new Date(date);
+      return appointmentDate.getDate() == currentDate.getDate();
     },
   },
   mounted() {
@@ -144,33 +161,41 @@ export default {
     <v-card
       v-for="appointment in sortedAppointments"
       :key="appointment.id"
-      class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
+      class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-column justify-center"
+      :class="{
+        'past-date': isPastDate(appointment.Date),
+        today: isToday(appointment.Date),
+      }"
     >
-      <div class="w-100">
-        <v-card-title>{{ appointment.Requester.name }}</v-card-title>
-        <v-card-subtitle><strong>Telefone: {{ appointment.Requester.phone }}</strong></v-card-subtitle>
-        <v-card-text
-          ><strong>Edificação:</strong> {{ appointment.Property.landName }}
-          <br />
-          <strong>Endereço:</strong>{{ appointment.Property.landDescription }}
-          <br />
-          <strong>Agendado para dia </strong>
-          {{ getFormatDate(appointment.Date) }}
-          <strong>às </strong>
-          {{ appointment.Time }}
-        </v-card-text>
-      </div>
+      <div class="d-flex align-center flex-row justify-center w-100">
+        <div class="w-100">
+          <v-card-title>{{ appointment.Requester.name }}</v-card-title>
+          <v-card-subtitle
+            ><strong
+              >Telefone: {{ appointment.Requester.phone }} <br />
+              E-mail: {{ appointment.Requester.email }}</strong
+            ></v-card-subtitle
+          >
+          <v-card-text
+            ><strong>Edificação:</strong> {{ appointment.Property.landName }}
+            <br />
+            <strong>Endereço:</strong>{{ appointment.Property.landDescription }}
+            <br />
+            <strong>Agendado para dia </strong>
+            {{ getFormatDate(appointment.Date) }}
+            <strong>às </strong>
+            {{ appointment.Time }}
+          </v-card-text>
+        </div>
 
-      <div class="w-25">
-        <div class="btn-container d-flex align-end justify-end">
+        <div class="btn-container d-flex align-end justify-end w-25 mr-6 mt-13">
           <v-btn
-            class="rounded-pill"
+            class="rounded-pill elevation-1"
             expand-on-hover
             variant="flat"
             @click="deleteAppointment(appointment.id)"
           >
             <p class="text text-body-2 text-grey-darken-2">Excluir</p>
-
             <span
               ><v-icon size="x-large" color="grey-darken-2"
                 >mdi-close</v-icon
@@ -180,13 +205,16 @@ export default {
         </div>
       </div>
 
+      <v-divider class="border-opacity-50"></v-divider>
+
       <v-checkbox-btn
+        class="barra w-100 text-center"
         :label="appointment.Status"
-        :model-value="appointment.Status == 'concluído'"
+        :model-value="appointment.Status == 'Concluído'"
         @change="
           updateAppointmentStatus(
             appointment.id,
-            $event.target.checked ? 'concluído' : 'pendente'
+            $event.target.checked ? 'concluído' : 'Pendente'
           )
         "
       ></v-checkbox-btn>
@@ -201,6 +229,10 @@ export default {
 .btn-container:hover {
   transition: 1s;
 }
+
+.barra {
+  background-color: rgba(42, 42, 42, 0.157);
+}
 .text {
   transition: 1s;
   width: 0px;
@@ -214,6 +246,13 @@ export default {
 
 h2 {
   font-size: 2rem;
+}
+
+.past-date {
+  background-color: #b71c1ca9;
+}
+.today {
+  background-color: #1565c0a9;
 }
 
 v-card {

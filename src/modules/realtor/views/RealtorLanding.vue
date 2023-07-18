@@ -7,6 +7,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
+import Menu from "@/modules/realtor/components/Menu.vue";
 
 export default {
   data() {
@@ -15,27 +16,32 @@ export default {
     };
   },
   computed: {
-  sortedAppointments() {
-    return this.appointments.sort((a, b) => {
-      const statusA = a.Status?.toLowerCase();
-      const statusB = b.Status?.toLowerCase();
-      if (statusA < statusB) return 1;
-      if (statusA > statusB) return -1;
+    sortedAppointments() {
+      return this.appointments.sort((a, b) => {
+        const statusA = a.Status?.toLowerCase();
+        const statusB = b.Status?.toLowerCase();
+        if (statusA < statusB) return 1;
+        if (statusA > statusB) return -1;
 
-      const dateA = new Date(a.Date);
-      const dateB = new Date(b.Date);
-      if (dateA < dateB) return -1;
-      if (dateA > dateB) return 1;
+        const dateA = new Date(a.Date);
+        const dateB = new Date(b.Date);
+        if (dateA < dateB) return -1;
+        if (dateA > dateB) return 1;
 
-      const timeA = a.Time?.toLowerCase();
-      const timeB = b.Time?.toLowerCase();
-      if (timeA < timeB) return -1;
-      if (timeA > timeB) return 1;
+        const timeA = a.Time?.toLowerCase();
+        const timeB = b.Time?.toLowerCase();
+        if (timeA < timeB) return -1;
+        if (timeA > timeB) return 1;
 
-      return 0;
-    });
+        return 0;
+      });
+    },
   },
+
+  components: {
+    Menu,
   },
+
   methods: {
     async getAppointment() {
       const querySnapshot = await onSnapshot(
@@ -72,8 +78,11 @@ export default {
 </script>
 
 <template>
+    <Menu class="mb-8 elevation-3"></Menu>
+
   <v-container class="bg-grey w-75">
-    <h1 class="text-center my-9">Confira sua agenda</h1>
+
+    <h2 class="text-center mb-4">Confira sua agenda:</h2>
 
     <v-table fixed-header>
       <thead>
@@ -90,8 +99,8 @@ export default {
         <tr v-for="appointment in sortedAppointments" :key="appointment.id">
           <td>{{ getFormatDate(appointment.Date) }}</td>
           <td>{{ appointment.Time }}</td>
-          <td>{{ appointment.Property }}</td>
-          <td>{{appointment.Requester}}</td>
+          <td>{{ appointment.Property.landName }}</td>
+          <td>{{ appointment.Requester }}</td>
           <td>
             <v-checkbox-btn
               :label="appointment.Status"
@@ -137,5 +146,9 @@ export default {
   display: flex;
   width: 47px;
   align-content: center;
+}
+
+h2 {
+  font-size: 2rem;
 }
 </style>

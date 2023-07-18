@@ -40,3 +40,10 @@ onMounted(() => {
     {{ snackbarText }}
   </v-snackbar>
 </template>
+
+<style>
+body{
+  background-image: url(./assets/fundo.jpg);
+  background-size: cover;
+}
+</style>

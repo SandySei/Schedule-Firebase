@@ -36,7 +36,7 @@ export const signUp = async ({ email, password, name, phone, role }) => {
       phoneNumber: phone,
     });
     // criar um usuário no firestore na coleção users usando email e role
-    await userRole({ email, name, role });
+    await userRole({ email, name, role, phone });
     return user;
   } catch (err) {
     console.error(err);
@@ -54,6 +54,7 @@ export async function addRole() {
     Role: this.role,
     email: this.email,
     name: this.displayName,
+    phone: this.phoneNumber,
   };
   await userRole(payload);
 }

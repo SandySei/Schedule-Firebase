@@ -9,6 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
+import Menu from "../components/Menu.vue";
 
 export default {
   data() {

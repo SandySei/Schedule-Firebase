@@ -78,62 +78,69 @@ export default {
 </script>
 
 <template>
-    <Menu class="mb-8 elevation-3"></Menu>
+  <Menu class="mb-8 elevation-3"></Menu>
 
-  <v-container class="bg-grey w-75">
-
+  <v-container
+    class="bg-grey-lighten-3 mb-8 elevation-2 w-75 d-flex align-center flex-column justify-center"
+  >
     <h2 class="text-center mb-4">Confira sua agenda:</h2>
 
-    <v-table fixed-header>
-      <thead>
-        <tr>
-          <th class="text-left">Data escolhida</th>
-          <th class="text-left">Horário</th>
-          <th class="text-left">Loteamento escolhido</th>
-          <th class="text-left">Solicitante</th>
-          <th class="text-left">Status da visita</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="appointment in sortedAppointments" :key="appointment.id">
-          <td>{{ getFormatDate(appointment.Date) }}</td>
-          <td>{{ appointment.Time }}</td>
-          <td>{{ appointment.Property.landName }}</td>
-          <td>{{ appointment.Requester }}</td>
-          <td>
-            <v-checkbox-btn
-              :label="appointment.Status"
-              :model-value="appointment.Status == 'concluído'"
-              @change="
-                updateAppointmentStatus(
-                  appointment.id,
-                  $event.target.checked ? 'concluído' : 'pendente'
-                )
-              "
-            ></v-checkbox-btn>
-          </td>
-          <td>
-            <div class="btn-container">
-              <v-btn
-                expand-on-hover
-                variant="flat"
-                @click="deleteAppointment(appointment.id)"
-              >
-                <span class="pr-3"
-                  ><v-icon color="red-darken-4">mdi-close</v-icon></span
-                >
-                <span class="text text-body-2 text-red-darken-4">Excluir</span>
-              </v-btn>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
+    <v-card
+      v-for="appointment in sortedAppointments"
+      :key="appointment.id"
+      class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
+    >
+      <div class="w-100">
+        <v-card-title>{{ appointment.Requester }}</v-card-title>
+        <v-card-text
+          ><strong>Edificação:</strong> {{ appointment.Property.landName }}
+          <br />
+          <strong>Endereço:</strong>{{ appointment.Property.landDescription }}
+          <br />
+          <strong>Agendado para dia </strong>
+          {{ getFormatDate(appointment.Date) }}
+          <strong>às </strong>
+          {{ appointment.Time }}
+        </v-card-text>
+      </div>
+
+      <div class="w-25">
+        <v-checkbox-btn
+          :label="appointment.Status"
+          :model-value="appointment.Status == 'concluído'"
+          @change="
+            updateAppointmentStatus(
+              appointment.id,
+              $event.target.checked ? 'concluído' : 'pendente'
+            )
+          "
+        ></v-checkbox-btn>
+
+        <div class="btn-container d-flex align-end justify-end">
+          <v-btn
+            class="rounded-pill"
+            expand-on-hover
+            variant="flat"
+            @click="deleteAppointment(appointment.id)"
+          >
+            <p class="text text-body-2 text-grey-darken-2">Excluir</p>
+
+            <span
+              ><v-icon size="x-large" color="grey-darken-2"
+                >mdi-close</v-icon
+              ></span
+            >
+          </v-btn>
+        </div>
+      </div>
+    </v-card>
   </v-container>
 </template>
 
 <style scoped>
+.rounded-pill {
+  height: 60px;
+}
 .btn-container:hover {
   transition: 1s;
 }
@@ -144,11 +151,15 @@ export default {
 }
 .btn-container:hover .text {
   display: flex;
-  width: 47px;
+  width: 50px;
   align-content: center;
 }
 
 h2 {
   font-size: 2rem;
+}
+
+v-card {
+  height: 500px;
 }
 </style>

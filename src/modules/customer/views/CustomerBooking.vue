@@ -6,6 +6,7 @@ import {
   doc,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -72,36 +73,64 @@ export default {
         alert("Por favor, selecione todas as opções");
       }
     },
-    async checkConflict(realtor, date, time) {
-      const querySnapshot = await getDocs(collection(db, "appointments"));
-      const appointments = querySnapshot.docs.map((doc) => doc.data());
+    async checkConflict(realtorId, date, time) {
+      return new Promise((resolve, reject) => {
+        getDocs(collection(db, "appointments"))
+          .then((querySnapshot) => {
+            const appointments = querySnapshot.docs.map((doc) => doc.data());
 
-      const conflict = appointments.some((appointment) => {
-        return (
-          appointment.Realtor === realtor &&
-          appointment.Date === date &&
-          appointment.Time === time
-        );
+            const conflict = appointments.some((appointment) => {
+              return (
+                appointment.Realtor === realtorId &&
+                appointment.Date === date &&
+                appointment.Time === time
+              );
+            });
+
+            resolve(conflict);
+          })
+          .catch((error) => {
+            reject(error);
+          });
       });
-
-      if (conflict) {
-        alert(
-          "Já existe um agendamento para esse horário com o mesmo corretor. Por favor, escolha outro horário."
-        );
-      } else {
-        return conflict;
-      }
     },
-    async checkConflictAndOpenModal() {
-      const hasConflict = await this.checkConflict(
-        this.selectedRealtor,
+    checkConflictAndOpenModal() {
+      this.checkConflict(
+        this.selectedRealtorId,
         this.selectedDate,
         this.selectedTime
-      );
+      )
+        .then((hasConflict) => {
+          if (hasConflict) {
+            alert(
+              "Já existe um agendamento para esse horário com o mesmo corretor. Por favor, escolha outro horário."
+            );
+          } else {
+            this.openModal();
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
 
-      if (hasConflict === false) {
-        this.openModal();
+    async create(payload) {
+      const previous = await getDocs(
+        query(
+          collection(db, "appointments"),
+          where("Property", "==", payload.Property),
+          where("Realtor", "==", payload.Realtor),
+          where("Date", "==", payload.Date),
+          where("Time", "==", payload.Time)
+        )
+      );
+      if (previous.docs.length > 0) {
+        const docRef = doc(db, "appointments", previous.docs[0].id);
+        await updateDoc(docRef, payload);
+        return docRef;
       }
+      const docRef = await addDoc(collection(db, "appointments"), payload);
+      return docRef;
     },
     getFormatDate(datetime) {
       if (!datetime) return "";

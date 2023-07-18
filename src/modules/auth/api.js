@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { db } from "/firebase.config";
 import router from "@/router";
+import add from "date-fns/fp/add";
 
 const auth = getAuth();
 const usersRef = collection(db, "users");
@@ -81,14 +82,14 @@ export const logout = async () =>
     .then(() => {
       // LogOut com sucesso
       router.push("/");
-      localStorage.clear();
     })
     .catch((error) => {
       alert("Ocorreu um erro!");
     });
 
-export const isLogged = async (role) => {
+export const isLogged = async () => {
   onAuthStateChanged(auth, (user) => {
+    console.log(user);
     if (user) {
       //console.log(user);
       //role == 'dificl' ? router.puhs('rearedsad') : router.push('dsadsa')

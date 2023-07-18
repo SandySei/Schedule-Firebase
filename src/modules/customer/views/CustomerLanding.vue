@@ -10,9 +10,6 @@ export default {
       appointments: [],
     };
   },
-  async mounted() {
-    await this.getAppointment();
-  },
   components: {
     Menu,
   },

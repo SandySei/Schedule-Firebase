@@ -195,7 +195,7 @@ export default {
 <template>
   <Menu class="mb-8 elevation-3"></Menu>
 
-  <v-container class="bg-grey-lighten-3 mb-8 elevation-2 w-75">
+  <v-container class="cardprincipal mb-8 elevation-2 w-75">
     <div class="d-flex flex-row align-center justify-center w-100">
       <div class="w-25"></div>
       <h2 class="text-center w-50">Agende seu horário:</h2>
@@ -214,7 +214,7 @@ export default {
       </div>
     </div>
 
-    <p class="ml-10">Escolha o local:</p>
+    <p class="ml-10"><strong>Escolha o local:</strong></p>
 
     <div class="d-flex align-center mt-4">
       <LocationCard
@@ -233,8 +233,8 @@ export default {
 
     <div class="d-flex align-center justify-center my-5">
       <div>
-        <p class="ml-10 mb-5 d-flex justify-center">Escolha o Dia e Horário:</p>
-        <div class="d-flex align-center justify-center mx-7">
+        <p class="ml-16 mb-5"><strong>Escolha o Dia e Horário:</strong></p>
+        <div class="caixa-dia d-flex align-center justify-center mx-7">
           <v-date-picker
             class="ml-7 w-50 rounded-0"
             v-model.string="selectedDate"
@@ -320,8 +320,19 @@ export default {
 </template>
 
 <style scoped>
+.cardprincipal {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
 .card-time {
   width: 550px;
+}
+.caixa-dia {
+  background-color: white;
+  height: 320px;
 }
 
 .rounded-pill {

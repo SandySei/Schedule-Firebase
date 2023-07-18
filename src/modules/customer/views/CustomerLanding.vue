@@ -84,7 +84,7 @@ export default {
 <template>
   <Menu class="mb-8 elevation-3"></Menu>
 
-  <v-container class="bg-grey-lighten-3 mb-8 elevation-2 w-75">
+  <v-container class="cardprincipal mb-8 elevation-2 w-75">
     <div class="d-flex flex-row align-center justify-center w-100">
       <div class="w-25"></div>
       <h2 class="text-center w-50">Seus agendamentos:</h2>
@@ -105,7 +105,7 @@ export default {
       </div>
     </div>
 
-    <div class="d-flex align-center flex-column justify-center mt-8 w-100">
+    <div class=" d-flex align-center flex-column justify-center mt-8 w-100">
       <v-card
         v-for="appointment in appointments"
         :key="appointment.id"
@@ -113,7 +113,7 @@ export default {
           'past-date': isPastDate(appointment.Date),
           today: isToday(appointment.Date),
         }"
-        class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
+        class="cardcominfo w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
       >
         <div class="w-75">
           <v-card-title>{{ appointment.Property.landName }}</v-card-title>
@@ -158,6 +158,14 @@ export default {
 </template>
 
 <style scoped>
+
+.cardprincipal{
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
 .rounded-pill {
   height: 60px;
 }
@@ -175,12 +183,14 @@ export default {
   width: 168px;
   align-content: center;
 }
-
+.cardcominfo{
+  background-color:#ffffffb1;
+}
 .past-date {
-  background-color: #b71c1ca9;
+  background-color: #b71c1cb1;
 }
 .today {
-  background-color: #1565c0a9;
+  background-color: #1565c0b1;
 }
 h2 {
   font-size: 2rem;

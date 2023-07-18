@@ -154,14 +154,14 @@ export default {
   <Menu class="mb-8 elevation-3"></Menu>
 
   <v-container
-    class="bg-grey-lighten-3 mb-8 elevation-2 w-75 d-flex align-center flex-column justify-center"
+    class="cardprincipal mb-8 elevation-2 w-75 d-flex align-center flex-column justify-center"
   >
     <h2 class="text-center mb-4">Confira sua agenda:</h2>
 
     <v-card
       v-for="appointment in sortedAppointments"
       :key="appointment.id"
-      class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-column justify-center"
+      class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-column justify-center cardDay"
       :class="{
         'past-date': isPastDate(appointment.Date),
         today: isToday(appointment.Date),
@@ -223,6 +223,13 @@ export default {
 </template>
 
 <style scoped>
+.cardprincipal {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
 .rounded-pill {
   height: 60px;
 }
@@ -247,12 +254,14 @@ export default {
 h2 {
   font-size: 2rem;
 }
-
+.cardDay {
+  background-color: #ffffffb1;
+}
 .past-date {
-  background-color: #b71c1ca9;
+  background-color: #b71c1cb1;
 }
 .today {
-  background-color: #1565c0a9;
+  background-color: #1565c0b1;
 }
 
 v-card {

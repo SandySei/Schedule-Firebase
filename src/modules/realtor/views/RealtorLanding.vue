@@ -1,13 +1,17 @@
 <script>
 import {
-  onSnapshot,
+  getDocs,
+  getDoc,
   updateDoc,
   deleteDoc,
   collection,
   doc,
+  query,
+  where,
 } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
 import Menu from "@/modules/realtor/components/Menu.vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default {
   data() {
@@ -44,16 +48,65 @@ export default {
 
   methods: {
     async getAppointment() {
-      const querySnapshot = await onSnapshot(
-        collection(db, "appointments"),
-        (snapshot) => {
-          this.appointments = snapshot.docs.map((doc) => {
-            const data = doc.data();
-            data.id = doc.id;
-            return data;
-          });
-        }
+      //1 - pegar o nome do corretor autenticado da autenticação
+      const auth = getAuth();
+      const { displayName } = auth.currentUser;
+
+      //2 - buscar os dados do corretor na coleção users, filtrando users por name
+      const usersRef = await getDocs(
+        query(collection(db, "users"), where("name", "==", displayName))
       );
+      const realtorUserDoc = usersRef.docs[0];
+      const realtorUserData = {
+        id: realtorUserDoc.id,
+        ...realtorUserDoc.data(),
+      };
+
+      //3 - buscar os appointments cujo campo Realtor é igual ao id do realtor encontrado no passo anterior
+      const realtorAppointmentsSnapshot = await getDocs(
+        query(
+          collection(db, "appointments"),
+          where("Realtor", "==", realtorUserData.id)
+        )
+      );
+
+      //5 - salvar uma lista de appointments exclusivos do corretor com os dados do Requester em this.appointments
+      this.appointments = await Promise.all(
+        realtorAppointmentsSnapshot.docs.map(async (appointmentDoc) => {
+          const appointmentData = {
+            id: appointmentDoc.id,
+            ...appointmentDoc.data(),
+          };
+          //4 - para cada appointment, buscar o usuario com nome igual ao campo Requester do appointment
+          const requestersSnapshot = await getDocs(
+            query(
+              collection(db, "users"),
+              where("name", "==", appointmentData.Requester)
+            )
+          );
+          const requesterDocs = requestersSnapshot.docs[0];
+          const requesterData = {
+            id: requesterDocs.id,
+            ...requesterDocs.data(),
+          };
+
+          return { ...appointmentData, Requester: { ...requesterData } };
+        })
+      );
+      /*
+      formato final
+      {
+        id:
+        Property
+        Realtor:
+        Requester: {
+          id:
+          name:
+          phone
+        }
+      }
+      console.log(this.appointments);
+      */
     },
     async updateAppointmentStatus(appointmentId, status) {
       const appointmentRef = doc(db, "appointments", appointmentId);
@@ -72,7 +125,10 @@ export default {
     },
   },
   mounted() {
-    this.getAppointment();
+    onAuthStateChanged(getAuth(), (user) => {
+      if (!user) return;
+      this.getAppointment();
+    });
   },
 };
 </script>
@@ -91,7 +147,8 @@ export default {
       class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
     >
       <div class="w-100">
-        <v-card-title>{{ appointment.Requester }}</v-card-title>
+        <v-card-title>{{ appointment.Requester.name }}</v-card-title>
+        <v-card-subtitle><strong>Telefone: {{ appointment.Requester.phone }}</strong></v-card-subtitle>
         <v-card-text
           ><strong>Edificação:</strong> {{ appointment.Property.landName }}
           <br />
@@ -105,17 +162,6 @@ export default {
       </div>
 
       <div class="w-25">
-        <v-checkbox-btn
-          :label="appointment.Status"
-          :model-value="appointment.Status == 'concluído'"
-          @change="
-            updateAppointmentStatus(
-              appointment.id,
-              $event.target.checked ? 'concluído' : 'pendente'
-            )
-          "
-        ></v-checkbox-btn>
-
         <div class="btn-container d-flex align-end justify-end">
           <v-btn
             class="rounded-pill"
@@ -133,6 +179,17 @@ export default {
           </v-btn>
         </div>
       </div>
+
+      <v-checkbox-btn
+        :label="appointment.Status"
+        :model-value="appointment.Status == 'concluído'"
+        @change="
+          updateAppointmentStatus(
+            appointment.id,
+            $event.target.checked ? 'concluído' : 'pendente'
+          )
+        "
+      ></v-checkbox-btn>
     </v-card>
   </v-container>
 </template>

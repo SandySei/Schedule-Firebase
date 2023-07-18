@@ -92,8 +92,8 @@ export default {
         class="btn-container texto1 d-flex align-end justify-end mr-2 mt-2 w-25"
         @click="$router.push({ name: 'booking' })"
       >
-        <v-btn class="rounded-pill" expand-on-hover variant="flat">
-          <p class="text  text-body-2 text-grey-darken-2">
+        <v-btn class="rounded-pill elevation-1" expand-on-hover variant="flat">
+          <p class="text text-body-2 text-grey-darken-2">
             Clique para agendar visita
           </p>
           <span
@@ -117,9 +117,11 @@ export default {
       >
         <div class="w-75">
           <v-card-title>{{ appointment.Property.landName }}</v-card-title>
-          <v-card-subtitle> <strong>{{
-            appointment.Property.landDescription
-          }} </strong></v-card-subtitle>
+          <v-card-subtitle>
+            <strong
+              >{{ appointment.Property.landDescription }}
+            </strong></v-card-subtitle
+          >
 
           <v-card-text
             ><strong>Corretor:</strong> {{ appointment.RealtorName }} <br />
@@ -132,10 +134,14 @@ export default {
         </div>
 
         <div
-          class="btn-container d-flex align-end justify-end mr-2 mt-2 w-25"
+          class="btn-container d-flex align-end justify-end mt-2 w-25 mr-6"
           @click="deleteAppointment(appointment.id)"
         >
-          <v-btn class="rounded-pill" expand-on-hover variant="flat">
+          <v-btn
+            class="rounded-pill elevation-1"
+            expand-on-hover
+            variant="flat"
+          >
             <p class="text text-body-2 text-grey-darken-2">
               Cancelar Agendamento
             </p>

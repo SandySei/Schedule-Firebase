@@ -203,7 +203,7 @@ export default {
         class="btn-container d-flex align-end justify-end mr-2 mt-2 w-25"
         @click="$router.push({ name: 'customerLanding' })"
       >
-        <v-btn class="rounded-pill" expand-on-hover variant="flat">
+        <v-btn class="rounded-pill elevation-1" expand-on-hover variant="flat">
           <p class="text text-body-2 text-grey-darken-2">Clique para voltar</p>
           <span
             ><v-icon size="x-large" color="grey-darken-2"

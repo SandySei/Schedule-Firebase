@@ -172,7 +172,6 @@ export default {
 .btn-container:hover {
   transition: 1s;
 }
-
 .text {
   transition: 1s;
   width: 0px;

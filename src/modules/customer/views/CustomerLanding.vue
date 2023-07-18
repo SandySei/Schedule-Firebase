@@ -1,7 +1,8 @@
 <script>
-import { getDocs, collection, getDoc, doc } from "firebase/firestore";
+import { getDocs, collection, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
 import Menu from "@/modules/customer/components/Menu.vue";
+import { doc } from "firebase/firestore";
 
 export default {
   data() {
@@ -41,10 +42,17 @@ export default {
         if (dateA >= currentDate && dateB < currentDate) {
           return -1; // Mantém a data atual no topo
         } else if (dateA < currentDate && dateB >= currentDate) {
-          return ; // Move a data atual para cima
+          return; // Move a data atual para cima
         }
         return dateA - dateB;
       });
+    },
+
+    async deleteAppointment(appointmentId) {
+      const appointmentRef = doc(db, "appointments", appointmentId);
+      await deleteDoc(appointmentRef);
+      await this.getAppointment();
+      this.$emit("snackbar", "Agendamento desmarcado com sucesso!");
     },
 
     getFormatDate(datetime) {
@@ -60,6 +68,9 @@ export default {
       return appointmentDate < currentDate;
     },
   },
+  mounted() {
+    this.getAppointment();
+  },
 };
 </script>
 
@@ -74,12 +85,7 @@ export default {
         class="btn-container d-flex align-end justify-end mr-2 mt-2 w-25"
         @click="$router.push({ name: 'booking' })"
       >
-        <v-btn
-          class="rounded-pill"
-          expand-on-hover
-          variant="flat"
-          @click="deleteAppointment(appointment.id)"
-        >
+        <v-btn class="rounded-pill" expand-on-hover variant="flat">
           <p class="text text-body-2 text-grey-darken-2">
             Clique para agendar visita
           </p>
@@ -97,20 +103,38 @@ export default {
         v-for="appointment in appointments"
         :key="appointment.id"
         :class="{ 'past-date': isPastDate(appointment.Date) }"
-        class="w-75 mb-5 elevation-0 rounded-0"
+        class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
       >
-        <v-card-title>{{ appointment.Property.landName }}</v-card-title>
-        <v-card-subtitle>{{
-          appointment.Property.landDescription
-        }}</v-card-subtitle>
+        <div class="w-75">
+          <v-card-title>{{ appointment.Property.landName }}</v-card-title>
+          <v-card-subtitle>{{
+            appointment.Property.landDescription
+          }}</v-card-subtitle>
 
-        <v-card-text
-          ><strong>Corretor:</strong> {{ appointment.RealtorName }} <br />
-          <strong>Agendado para dia</strong>
-          {{ getFormatDate(appointment.Date) }}
-          <strong>às</strong>
-          {{ appointment.Time }}
-        </v-card-text>
+          <v-card-text
+            ><strong>Corretor:</strong> {{ appointment.RealtorName }} <br />
+            <strong>Agendado para dia</strong>
+            {{ getFormatDate(appointment.Date) }}
+            <strong>às</strong>
+            {{ appointment.Time }}
+          </v-card-text>
+        </div>
+
+        <div
+          class="btn-container d-flex align-end justify-end mr-2 mt-2 w-25"
+          @click="deleteAppointment(appointment.id)"
+        >
+          <v-btn class="rounded-pill" expand-on-hover variant="flat">
+            <p class="text text-body-2 text-grey-darken-2">
+              Cancelar Agendamento
+            </p>
+            <span
+              ><v-icon size="x-large" color="grey-darken-1"
+                >mdi-close</v-icon
+              ></span
+            >
+          </v-btn>
+        </div>
       </v-card>
     </div>
   </v-container>
@@ -130,7 +154,7 @@ export default {
 }
 .btn-container:hover .text {
   display: flex;
-  width: 180px;
+  width: 160px;
   align-content: center;
 }
 

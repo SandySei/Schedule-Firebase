@@ -36,7 +36,7 @@ onMounted(() => {
     @snackbar="setupSnackbar"
     :isSnackBarOpen="isSnackBarOpen"
   ></router-view>
-  <v-snackbar :timeout="2000" color="red-darken-4" v-model="isSnackBarOpen">
+  <v-snackbar :timeout="3000" color="red-darken-4" v-model="isSnackBarOpen">
     {{ snackbarText }}
   </v-snackbar>
 </template>

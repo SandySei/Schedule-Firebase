@@ -7,6 +7,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
+import Menu from "@/modules/realtor/components/Menu.vue";
 
 export default {
   data() {
@@ -15,27 +16,32 @@ export default {
     };
   },
   computed: {
-  sortedAppointments() {
-    return this.appointments.sort((a, b) => {
-      const statusA = a.Status?.toLowerCase();
-      const statusB = b.Status?.toLowerCase();
-      if (statusA < statusB) return 1;
-      if (statusA > statusB) return -1;
+    sortedAppointments() {
+      return this.appointments.sort((a, b) => {
+        const statusA = a.Status?.toLowerCase();
+        const statusB = b.Status?.toLowerCase();
+        if (statusA < statusB) return 1;
+        if (statusA > statusB) return -1;
 
-      const dateA = new Date(a.Date);
-      const dateB = new Date(b.Date);
-      if (dateA < dateB) return -1;
-      if (dateA > dateB) return 1;
+        const dateA = new Date(a.Date);
+        const dateB = new Date(b.Date);
+        if (dateA < dateB) return -1;
+        if (dateA > dateB) return 1;
 
-      const timeA = a.Time?.toLowerCase();
-      const timeB = b.Time?.toLowerCase();
-      if (timeA < timeB) return -1;
-      if (timeA > timeB) return 1;
+        const timeA = a.Time?.toLowerCase();
+        const timeB = b.Time?.toLowerCase();
+        if (timeA < timeB) return -1;
+        if (timeA > timeB) return 1;
 
-      return 0;
-    });
+        return 0;
+      });
+    },
   },
+
+  components: {
+    Menu,
   },
+
   methods: {
     async getAppointment() {
       const querySnapshot = await onSnapshot(
@@ -72,59 +78,69 @@ export default {
 </script>
 
 <template>
-  <v-container class="bg-grey w-75">
-    <h1 class="text-center my-9">Confira sua agenda</h1>
+  <Menu class="mb-8 elevation-3"></Menu>
 
-    <v-table fixed-header>
-      <thead>
-        <tr>
-          <th class="text-left">Data escolhida</th>
-          <th class="text-left">Horário</th>
-          <th class="text-left">Loteamento escolhido</th>
-          <th class="text-left">Solicitante</th>
-          <th class="text-left">Status da visita</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="appointment in sortedAppointments" :key="appointment.id">
-          <td>{{ getFormatDate(appointment.Date) }}</td>
-          <td>{{ appointment.Time }}</td>
-          <td>{{ appointment.Property }}</td>
-          <td>{{appointment.Requester}}</td>
-          <td>
-            <v-checkbox-btn
-              :label="appointment.Status"
-              :model-value="appointment.Status == 'concluído'"
-              @change="
-                updateAppointmentStatus(
-                  appointment.id,
-                  $event.target.checked ? 'concluído' : 'pendente'
-                )
-              "
-            ></v-checkbox-btn>
-          </td>
-          <td>
-            <div class="btn-container">
-              <v-btn
-                expand-on-hover
-                variant="flat"
-                @click="deleteAppointment(appointment.id)"
-              >
-                <span class="pr-3"
-                  ><v-icon color="red-darken-4">mdi-close</v-icon></span
-                >
-                <span class="text text-body-2 text-red-darken-4">Excluir</span>
-              </v-btn>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
+  <v-container
+    class="bg-grey-lighten-3 mb-8 elevation-2 w-75 d-flex align-center flex-column justify-center"
+  >
+    <h2 class="text-center mb-4">Confira sua agenda:</h2>
+
+    <v-card
+      v-for="appointment in sortedAppointments"
+      :key="appointment.id"
+      class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
+    >
+      <div class="w-100">
+        <v-card-title>{{ appointment.Requester }}</v-card-title>
+        <v-card-text
+          ><strong>Edificação:</strong> {{ appointment.Property.landName }}
+          <br />
+          <strong>Endereço:</strong>{{ appointment.Property.landDescription }}
+          <br />
+          <strong>Agendado para dia </strong>
+          {{ getFormatDate(appointment.Date) }}
+          <strong>às </strong>
+          {{ appointment.Time }}
+        </v-card-text>
+      </div>
+
+      <div class="w-25">
+        <v-checkbox-btn
+          :label="appointment.Status"
+          :model-value="appointment.Status == 'concluído'"
+          @change="
+            updateAppointmentStatus(
+              appointment.id,
+              $event.target.checked ? 'concluído' : 'pendente'
+            )
+          "
+        ></v-checkbox-btn>
+
+        <div class="btn-container d-flex align-end justify-end">
+          <v-btn
+            class="rounded-pill"
+            expand-on-hover
+            variant="flat"
+            @click="deleteAppointment(appointment.id)"
+          >
+            <p class="text text-body-2 text-grey-darken-2">Excluir</p>
+
+            <span
+              ><v-icon size="x-large" color="grey-darken-2"
+                >mdi-close</v-icon
+              ></span
+            >
+          </v-btn>
+        </div>
+      </div>
+    </v-card>
   </v-container>
 </template>
 
 <style scoped>
+.rounded-pill {
+  height: 60px;
+}
 .btn-container:hover {
   transition: 1s;
 }
@@ -135,7 +151,15 @@ export default {
 }
 .btn-container:hover .text {
   display: flex;
-  width: 47px;
+  width: 50px;
   align-content: center;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+v-card {
+  height: 500px;
 }
 </style>

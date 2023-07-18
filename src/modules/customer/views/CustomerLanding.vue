@@ -27,6 +27,7 @@ export default {
           const realtorRef = await getDoc(doc(db, "users", data.Realtor));
           const realtorData = realtorRef.data();
           data.RealtorName = realtorData.name;
+          data.RealtorPhone = realtorData.phone;
           return data;
         })
       );
@@ -39,10 +40,11 @@ export default {
         const dateA = new Date(a.Date);
         const dateB = new Date(b.Date);
 
+        if (dateA.getDate() == currentDate.getDate()) return -1;
         if (dateA >= currentDate && dateB < currentDate) {
-          return -1; // Mantém a data atual no topo
+          return -1;
         } else if (dateA < currentDate && dateB >= currentDate) {
-          return; // Move a data atual para cima
+          return 0;
         }
         return dateA - dateB;
       });
@@ -65,7 +67,12 @@ export default {
     isPastDate(date) {
       const currentDate = new Date();
       const appointmentDate = new Date(date);
-      return appointmentDate < currentDate;
+      return appointmentDate.getDate() < currentDate.getDate();
+    },
+    isToday(date) {
+      const currentDate = new Date();
+      const appointmentDate = new Date(date);
+      return appointmentDate.getDate() == currentDate.getDate();
     },
   },
   mounted() {
@@ -82,11 +89,11 @@ export default {
       <div class="w-25"></div>
       <h2 class="text-center w-50">Seus agendamentos:</h2>
       <div
-        class="btn-container d-flex align-end justify-end mr-2 mt-2 w-25"
+        class="btn-container texto1 d-flex align-end justify-end mr-2 mt-2 w-25"
         @click="$router.push({ name: 'booking' })"
       >
         <v-btn class="rounded-pill" expand-on-hover variant="flat">
-          <p class="text text-body-2 text-grey-darken-2">
+          <p class="text  text-body-2 text-grey-darken-2">
             Clique para agendar visita
           </p>
           <span
@@ -102,17 +109,21 @@ export default {
       <v-card
         v-for="appointment in appointments"
         :key="appointment.id"
-        :class="{ 'past-date': isPastDate(appointment.Date) }"
+        :class="{
+          'past-date': isPastDate(appointment.Date),
+          today: isToday(appointment.Date),
+        }"
         class="w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
       >
         <div class="w-75">
           <v-card-title>{{ appointment.Property.landName }}</v-card-title>
-          <v-card-subtitle>{{
+          <v-card-subtitle> <strong>{{
             appointment.Property.landDescription
-          }}</v-card-subtitle>
+          }} </strong></v-card-subtitle>
 
           <v-card-text
             ><strong>Corretor:</strong> {{ appointment.RealtorName }} <br />
+            <strong>Telefone: </strong> {{ appointment.RealtorPhone }} <br />
             <strong>Agendado para dia</strong>
             {{ getFormatDate(appointment.Date) }}
             <strong>às</strong>
@@ -147,6 +158,7 @@ export default {
 .btn-container:hover {
   transition: 1s;
 }
+
 .text {
   transition: 1s;
   width: 0px;
@@ -154,14 +166,16 @@ export default {
 }
 .btn-container:hover .text {
   display: flex;
-  width: 160px;
+  width: 168px;
   align-content: center;
 }
 
 .past-date {
-  background-color: #b71c1c;
+  background-color: #b71c1ca9;
 }
-
+.today {
+  background-color: #1565c0a9;
+}
 h2 {
   font-size: 2rem;
 }

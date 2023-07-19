@@ -165,23 +165,30 @@ export default {
       class="cardcominfo w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-column justify-center"
     >
       <div class="w-100 d-flex flex-row align-center">
-        <div class="w-75 d-flex flex-column justify-center">
-          <v-card-title>{{ appointment.Requester.name }}</v-card-title>
-          <v-card-subtitle
-            ><strong
-              >Telefone: {{ appointment.Requester.phone }}</strong
-            ></v-card-subtitle
-          >
-          <v-card-text
-            ><strong>Edificação:</strong> {{ appointment.Property.landName }}
-            <br />
-            <strong>Endereço:</strong>{{ appointment.Property.landDescription }}
-            <br />
-            <strong>Agendado para dia </strong>
-            {{ getFormatDate(appointment.Date) }}
-            <strong>às </strong>
-            {{ appointment.Time }}
-          </v-card-text>
+        <div class="w-75 d-flex align-center">
+          <div>
+            <img :src="appointment.Property.landImage" class="ml-4 mt-2" />
+          </div>
+
+          <div>
+            <v-card-title>{{ appointment.Requester.name }}</v-card-title>
+            <v-card-subtitle
+              ><strong
+                >Telefone: {{ appointment.Requester.phone }}</strong
+              ></v-card-subtitle
+            >
+            <v-card-text
+              ><strong>Edificação:</strong> {{ appointment.Property.landName }}
+              <br />
+              <strong>Endereço:</strong
+              >{{ appointment.Property.landDescription }}
+              <br />
+              <strong>Agendado para dia </strong>
+              {{ getFormatDate(appointment.Date) }}
+              <strong>às </strong>
+              {{ appointment.Time }}
+            </v-card-text>
+          </div>
         </div>
 
         <div class="btn-container d-flex align-end justify-end w-25 pr-8">
@@ -226,7 +233,7 @@ export default {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.status{
+.status {
   background-color: #00000027;
 }
 .cardcominfo {
@@ -239,6 +246,9 @@ export default {
   background-color: #1565c0b1;
 }
 
+img {
+  width: 150px;
+}
 .rounded-pill {
   height: 60px;
 }

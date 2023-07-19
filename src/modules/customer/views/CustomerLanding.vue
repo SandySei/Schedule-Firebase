@@ -134,22 +134,26 @@ export default {
         }"
         class="cardcominfo w-75 mb-5 elevation-0 rounded-0 d-flex align-center flex-row justify-center"
       >
-        <div class="w-75">
-          <v-card-title>{{ appointment.Property.landName }}</v-card-title>
-          <v-card-subtitle>
-            <strong
-              >{{ appointment.Property.landDescription }}
-            </strong></v-card-subtitle
-          >
+        <div class="w-75 d-flex align-center">
+          <div><img :src="appointment.Property.landImage" class="ml-4 mt-2" /></div>
 
-          <v-card-text
-            ><strong>Corretor:</strong> {{ appointment.Realtor.name }} <br />
-            <strong>Telefone: </strong> {{ appointment.Realtor.phone }} <br />
-            <strong>Agendado para dia</strong>
-            {{ getFormatDate(appointment.Date) }}
-            <strong>às</strong>
-            {{ appointment.Time }}
-          </v-card-text>
+          <div>
+            <v-card-title>{{ appointment.Property.landName }}</v-card-title>
+            <v-card-subtitle>
+              <strong
+                >{{ appointment.Property.landDescription }}
+              </strong></v-card-subtitle
+            >
+
+            <v-card-text
+              ><strong>Corretor:</strong> {{ appointment.Realtor.name }} <br />
+              <strong>Telefone: </strong> {{ appointment.Realtor.phone }} <br />
+              <strong>Agendado para dia</strong>
+              {{ getFormatDate(appointment.Date) }}
+              <strong>às</strong>
+              {{ appointment.Time }}
+            </v-card-text>
+          </div>
         </div>
 
         <div
@@ -194,6 +198,10 @@ export default {
   transition: 1s;
   width: 0px;
   overflow: hidden;
+}
+
+img {
+  width: 150px;
 }
 .btn-container:hover .text {
   display: flex;

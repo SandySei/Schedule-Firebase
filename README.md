@@ -4,7 +4,7 @@ SOMENTE WEB
 
 Esta plataforma web de fácil acesso e intuitiva foi projetada para corretores e compradores de imóveis, eliminando a necessidade de secretárias ou complexos jogos de encaixe de horários. 
 
-A plataforma armazena os horários reservados, organizando-os automaticamente por data, e utilizando cores distintas para destacar o dia atual e os agendamentos passados. 
+A plataforma armazena os horários reservados, organizando-os automaticamente por data, e utilizando cores distintas para destacar o dia atual e os agendamentos passados. Utilizando o Banco de dados firebase.
 
 ### Estas foram as linguagens utilizadas neste repositório:
 

@@ -19,6 +19,6 @@ A plataforma armazena os horários reservados, organizando-os automaticamente po
 
 Neste repositório, você encontrará os arquivos necessários para executar o site localmente ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white), bem como o código-fonte completo do projeto.
 
-Sinta-se à vontade para explorar o código e fornecer feedbacks construtivos.
+Feito em conjunto com [Rafaella Gonçalves](https://github.com/Rafashhe)
 
 Obrigado por visitar este repositório.

@@ -7,7 +7,7 @@
       src="/src/assets/Schedule-home.png"
     ></v-img>
 
-    <div class="w-50 pa-16">
+    <div class="w-50 pa-8">
       <v-toolbar
         fixed-tabs
         class="mini-menu d-flex justify-space-evenly alising-center w-100"
@@ -25,7 +25,7 @@
       </v-toolbar>
       <router-view
         @snackbar="sendSnackbarEvent"
-        class="pa-10 menu"
+        class="px-8 menu"
       ></router-view>
     </div>
   </v-container>
@@ -58,11 +58,12 @@ background-color: rgba(223, 223, 223, 0.676);
 }
 
 .menu {
-  height: 650px;
+  height: 550px;
   background-color: #f5f5f5cf;
+  font-size: small;
 }
 
 .box-grey-fix {
-  height: 850px;
+  height: 700px;
 }
 </style>

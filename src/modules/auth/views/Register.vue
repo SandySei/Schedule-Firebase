@@ -200,13 +200,7 @@ async function handleSubmit(event) {
         @click="handleSubmit"
         >Cadastrar</v-btn
       >
-
-      <p class="pt-6 pl-1 text-grey-darken-1">
-        Entre
-        <router-link class="text-blue-accent-4 text-decoration-none" to="/"
-          >aqui!</router-link
-        >
-      </p>
+      
     </div>
   </v-form>
 </template>
